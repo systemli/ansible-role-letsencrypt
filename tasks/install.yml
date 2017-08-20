@@ -1,0 +1,80 @@
+---
+
+- name: install Let's Encrypt Certbot client
+  apt:
+    pkg: certbot
+    state: present
+    default_release: "{{ 'jessie-backports' if ansible_distribution_release == 'jessie' else omit }}"
+
+- name: install certbot plugin 'apache' on webservers
+  apt:
+    pkg: python-certbot-apache
+    state: present
+  when: ansible_fqdn in groups.web|d([])
+
+- block:
+  - name: install certbot DNS challenge helper script
+    template:
+      src: certbot-dns-hook.sh.j2
+      dest: /usr/local/bin/certbot-dns-hook.sh
+      owner: root
+      group: root
+      mode: 0755
+  - name: create directory /etc/letsencrypt/keys
+    file:
+      dest: /etc/letsencrypt/keys
+      state: directory
+      owner: root
+      group: root
+      mode: 0700
+  - name: install certbot DNS challenge nsupdate key
+    copy:
+      content: "{{ le_ddns_key }}"
+      dest: /etc/letsencrypt/keys/ddns_update.key
+      owner: root
+      group: root
+      mode: 0400
+    when: le_ddns_key|d()
+  - name: install certbot DNS challenge nsupdate private key
+    copy:
+      content: "{{ le_ddns_privkey }}"
+      dest: /etc/letsencrypt/keys/ddns_update.private
+      owner: root
+      group: root
+      mode: 0400
+    when: le_ddns_privkey|d()
+  when: le_dns_challenge|d(True)
+
+- block:
+  - name: add system group 'letsencrypt'
+    group:
+      name: letsencrypt
+      system: true
+  - name: adjust permissions for certificate directories
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: root
+      group: letsencrypt
+      mode: 0750
+    with_items:
+      - /etc/letsencrypt/archive
+      - /etc/letsencrypt/live
+  when: le_group|d(True)
+
+- name: check if le_account_email is set
+  fail:
+    msg: "Error: le_account_email required for account creation"
+  when: not le_account_email|d()
+
+- name: check if a Let's Encrypt account exists
+  stat:
+    path: /etc/letsencrypt/accounts
+  register: le_reg_accounts_dir
+
+- name: create Let's Encrypt account
+  command: >
+    certbot register
+    --email "{{ le_account_email|d() }}"
+    --non-interactive --agree-tos --quiet
+  when: not le_reg_accounts_dir.stat.exists
