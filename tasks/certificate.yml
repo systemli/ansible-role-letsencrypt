@@ -30,7 +30,7 @@
 
 - name: register system users
   command: "cut -d: -f1 /etc/passwd"
-  register: le_reg_system_users
+  register: letsencrypt_reg_system_users
 
 - name: add users to letsencrypt system group
   user:
@@ -38,4 +38,4 @@
     groups: letsencrypt
     append: yes
   with_items: "{{ cert.users|d([]) }}"
-  when: cert.users|d() and item in le_reg_system_users.stdout_lines|d([])
+  when: cert.users|d() and item in letsencrypt_reg_system_users.stdout_lines|d([])

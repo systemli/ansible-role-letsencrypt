@@ -1,14 +1,16 @@
 ---
 
 # Set the email address associated with the Let's Encrypt account
-le_account_email: ""
+letsencrypt_account_email: ""
 
-# Install the DNS challenge helper script
-le_dns_challenge: yes
-#le_ddns_server: ""
-#le_ddns_zone: ""
-#le_ddns_key: ""
-#le_ddns_privkey: ""
+# Install the DNS challenge helper script and DNS update key
+letsencrypt_dns_challenge: yes
+
+# Settings for the dynamic DNS zone updates
+#letsencrypt_ddns_server: ""
+#letsencrypt_ddns_zone: ""
+#letsencrypt_ddns_key: ""
+#letsencrypt_ddns_privkey: ""
 
 # Create system group 'letsencrypt' for access to certificates
-le_group: yes
+letsencrypt_group: yes
