@@ -7,8 +7,8 @@ le_account_email: ""
 le_dns_challenge: yes
 #le_ddns_server: ""
 #le_ddns_zone: ""
-#le_ddns_update_key: ""
-#le_ddns_update_private_key: ""
+#le_ddns_key: ""
+#le_ddns_privkey: ""
 
 # Create system group 'letsencrypt' for access to certificates
 le_group: yes
