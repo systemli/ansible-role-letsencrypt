@@ -14,11 +14,11 @@ Features:
 
 It does the following:
 
-* When invoked with unset/empty variable 'letsencrypt_certificates':
+* When invoked with unset/empty variable 'le_certs':
   * Installs certbot, registers an account at Let's Encrypt
   * Installs required files/keys for the DNS challenge
   * Creates the system group 'letsencrypt'
-* When invoked with filled variable 'letsencrypt_certificates':
+* When invoked with filled variable 'le_certs':
   * Requests a SSL certificate via the Let's Encrypt ACME API, either
     using the HTTP challenge or using the DNS challenge
   * Optionall sets the post-hook for certificate renewals to restart
@@ -26,13 +26,13 @@ It does the following:
   * Optionally adds system users to the 'letsencrypt' system group to grant
     them read access to the SSL certificates and their private keys
 
-## Expected structure of variable `letsencrypt_certificates`
+## Expected structure of variable `le_certs`
 
-The variable `letsencrypt_certificate` is expected to be a list of
+The variable `le_certs` is expected to be a list of
 dictionaries:
 
 ```
-letsencrypt_certificate:
+le_certs:
   - domains:
       - sub.example.org
       - sub2.example.org
@@ -78,13 +78,13 @@ Requirements:
 * A DNS server with a dedicated zone, used for the ACME DNS challenge only.
   This zone has to allow dynamic DNS updates (NSUPDATE) for TXT records
   (see below).
-* CNAME records for `_acme-challenge.sub.example.org` for all domain names(s)
-  of the requested certificate have to point to
-  `sub.example.org._le.example.org` (inside the dedicated zone for the ACME
-  DNS challenge).
+* CNAME records for `_acme-challenge.sub.example.org` for all domain
+  names(s) of the requested certificate have to point to
+  `sub.example.org._le.example.org` (inside the dedicated zone for the
+  ACME DNS challenge).
 * The content of the DNS update key and private DNS update keys need to be
-  available in the Ansible vars `letsencrypt_ddns_update_key` and
-  `letsencrypt_ddns_update_private_key` (preferably inside a vault).
+  available in the Ansible vars `le_ddns_key` and `le_ddns_privkey`
+  (preferably inside a vault).
 
 This role installs a helper script for the DNS challenge to
 `/usr/local/bin/certbot-dns-hook.sh`. This script will add the validation
@@ -138,18 +138,17 @@ zone "_le.example.org"       { type master; file "/etc/bind/zones/db._le.example
 
 ```
 # Set the email address associated with the Let's Encrypt account
-letsencrypt_account_email: ""
-
-# Set default challenge type ('http' or 'dns')
-letsencrypt_challenge: "http"
+le_account_email: ""
 
 # Install the DNS challenge helper script
-letsencrypt_dns_challenge: yes
-#letsencrypt_ddns_update_key: ""
-#letsencrypt_ddns_update_private_key: ""
+le_dns_challenge: yes
+#le_ddns_server: ""
+#le_ddns_zone: ""
+#le_ddns_key: ""
+#le_ddns_privkey: ""
 
 # Create system group 'letsencrypt' for access to certificates
-letsencrypt_group: yes
+le_group: yes
 ```
 
 ## License
