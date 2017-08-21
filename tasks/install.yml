@@ -29,21 +29,21 @@
       mode: 0700
   - name: install certbot DNS challenge nsupdate key
     copy:
-      content: "{{ le_ddns_key }}"
+      content: "{{ letsencrypt_ddns_key }}"
       dest: /etc/letsencrypt/keys/ddns_update.key
       owner: root
       group: root
       mode: 0400
-    when: le_ddns_key|d()
+    when: letsencrypt_ddns_key|d()
   - name: install certbot DNS challenge nsupdate private key
     copy:
-      content: "{{ le_ddns_privkey }}"
+      content: "{{ letsencrypt_ddns_privkey }}"
       dest: /etc/letsencrypt/keys/ddns_update.private
       owner: root
       group: root
       mode: 0400
-    when: le_ddns_privkey|d()
-  when: le_dns_challenge|d(True)
+    when: letsencrypt_ddns_privkey|d()
+  when: letsencrypt_dns_challenge|d(True)
 
 - block:
   - name: add system group 'letsencrypt'
@@ -60,21 +60,21 @@
     with_items:
       - /etc/letsencrypt/archive
       - /etc/letsencrypt/live
-  when: le_group|d(True)
+  when: letsencrypt_group|d(True)
 
-- name: check if le_account_email is set
+- name: check if letsencrypt_account_email is set
   fail:
-    msg: "Error: le_account_email required for account creation"
-  when: not le_account_email|d()
+    msg: "Error: letsencrypt_account_email required for account creation"
+  when: not letsencrypt_account_email|d()
 
 - name: check if a Let's Encrypt account exists
   stat:
     path: /etc/letsencrypt/accounts
-  register: le_reg_accounts_dir
+  register: letsencrypt_reg_accounts_dir
 
 - name: create Let's Encrypt account
   command: >
     certbot register
-    --email "{{ le_account_email|d() }}"
+    --email "{{ letsencrypt_account_email|d() }}"
     --non-interactive --agree-tos --quiet
-  when: not le_reg_accounts_dir.stat.exists
+  when: not letsencrypt_reg_accounts_dir.stat.exists
