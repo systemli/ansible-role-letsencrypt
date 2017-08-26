@@ -1,0 +1,65 @@
+# Linux files
+*~
+
+# OS X files
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Vim files
+.*.s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+
+# SublimeText project files
+*.sublime-workspace
+
+# TextMate files
+*.tmproj
+*.tmproject
+tmtags
+
+# Eclipse files (covers most of the basic stuff, you might need to add more)
+.classpath
+.project
+.settings
+
+# Intellij files
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Emacs files
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+.elc
+auto-save-list
+tramp
+.\#*
+
+# Org-mode files
+.org-id-locations
+*_archive
+
+# Testing files
+.molecule/
+.cache
+.molecule
+.tox
+.vagrant
+tests/__pycache__

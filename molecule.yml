@@ -1,0 +1,26 @@
+---
+molecule:
+  ignore_paths:
+    - .cache
+    - .git
+    - .molecule
+    - .tox
+_disabled:
+  - ansible_lint
+ansible:
+  playbook: tests/test.yml
+driver:
+  name: docker
+docker:
+  containers:
+    - name: ansible-role-skeleton-debian
+      image: maint/debian-systemd
+      image_version: latest
+      privileged: True
+dependency: []
+#dependency:
+#  name: galaxy
+#  requirements_file: tests/requirements.yml
+#  options:
+#      ignore-certs: True
+#      ignore-errors: True
