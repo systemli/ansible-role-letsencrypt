@@ -13,8 +13,8 @@ driver:
   name: docker
 docker:
   containers:
-    - name: letsencrypt-debian
-      image: maint/debian-systemd
+    - name: systemli-ansible-letsencrypt
+      image: debian
       image_version: latest
       privileged: True
 dependency: []
