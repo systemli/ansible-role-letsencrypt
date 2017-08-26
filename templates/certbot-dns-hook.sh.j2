@@ -22,10 +22,10 @@ fi
 DDNS_KEY='/etc/letsencrypt/keys/ddns_update.key'
 
 # Nameserver with the dynamic zone
-SERVER="{{ le_ddns_server }}"
+SERVER="{{ letsencrypt_ddns_server|d() }}"
 
 # Name of the dynamic zone
-ZONE="{{ le_ddns_zone }}"
+ZONE="{{ letsencrypt_ddns_zone|d() }}"
 
 # Time to live for the TXT records
 TTL=300
