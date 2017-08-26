@@ -12,4 +12,3 @@ script:
   - tox
 notifications:
     webhooks: https://galaxy.ansible.com/api/v1/notifications/
-
