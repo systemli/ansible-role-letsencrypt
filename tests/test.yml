@@ -5,4 +5,4 @@
     letsencrypt_test: yes
   roles:
     -
-      role: letsencrypt
+      role: ansible-role-letsencrypt
