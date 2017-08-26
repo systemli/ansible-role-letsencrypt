@@ -1,6 +1,8 @@
 ---
 - hosts: all
   remote_user: root
+  vars:
+    letsencrypt_test: yes
   roles:
     -
-      role: ansible-letsencrypt
+      role: letsencrypt
