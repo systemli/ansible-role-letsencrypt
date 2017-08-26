@@ -17,4 +17,5 @@ galaxy_info:
     webhooks: https://galaxy.ansible.com/api/v1/notifications/
 
 dependencies:
-  - { role: jnv.debian-backports, when: ansible_distribution_major_version < 9 }
+  - role: jnv.debian-backports
+    when: ansible_distribution_major_version < 9
