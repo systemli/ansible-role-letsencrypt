@@ -15,4 +15,6 @@ galaxy_info:
       - stretch
   notifications:
     webhooks: https://galaxy.ansible.com/api/v1/notifications/
-dependencies: []
+dependencies:
+  - role: 'jnv.debian-backports'
+    when: ansible_distribution_major_version < 9
