@@ -23,10 +23,19 @@ It does the following:
 * When invoked with filled variable 'letsencrypt_certs':
   * Requests a SSL certificate via the Let's Encrypt ACME API, either
     using the HTTP challenge or using the DNS challenge
-  * Optionall sets the post-hook for certificate renewals to restart
+  * Optionally sets the post-hook for certificate renewals to restart
     required services afterwards
   * Optionally adds system users to the 'letsencrypt' system group to grant
     them read access to the SSL certificates and their private keys
+
+## How it works (examples)
+
+ * Installation of certbot
+   ```ansible-playbook site.yml -l localhost -t letsencrypt```
+ * Creation of a certificate via HTTP challenge (restarting service 'apache2' at renewal):
+   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_certs":[{"domains":["sub.example.org"],"challenge":"http","services":["apache2"]}]}'```
+ * Creation of a certificate via DNS challenge (granting read access to certs to user 'Debian-exim', restarting service 'exim4' at renewal):
+   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_certs":[{"domains":["sub2.example.org"],"challenge":"dns","services":["exim4"],"users":["Debian-exim"]}]}'```
 
 ## Expected structure of variable `letsencrypt_certs`
 
