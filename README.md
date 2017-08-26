@@ -1,5 +1,7 @@
 # Ansible role to obtain Let's Encrypt SSL certificates
 
+[![Build Status](https://travis-ci.org/systemli/ansible-letsencrypt.svg?branch=master)](https://travis-ci.org/systemli/ansible-letsencrypt) [![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-letsencrypt-blue.svg)](https://galaxy.ansible.com/systemli/letsencrypt/)
+
 This role is meant to request SSL certificates from Let's Encrypt,
 using the HTTP or the DNS challenge for their ACME API.
 
@@ -157,4 +159,4 @@ This Ansible role is licensed under the GNU GPLv3.
 
 ## Author
 
-Copyright 2017 systemli.org <admin@systemli.org>
+Copyright 2017 systemli.org (https://www.systemli.org/)
