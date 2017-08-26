@@ -13,7 +13,7 @@ driver:
   name: docker
 docker:
   containers:
-    - name: ansible-role-skeleton-debian
+    - name: letsencrypt-debian
       image: maint/debian-systemd
       image_version: latest
       privileged: True
