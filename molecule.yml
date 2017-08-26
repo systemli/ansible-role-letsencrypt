@@ -17,10 +17,9 @@ docker:
       image: debian
       image_version: latest
       privileged: True
-dependency: []
-#dependency:
-#  name: galaxy
-#  requirements_file: tests/requirements.yml
-#  options:
-#      ignore-certs: True
-#      ignore-errors: True
+dependency:
+  name: galaxy
+  requirements_file: tests/requirements.yml
+  options:
+      ignore-certs: True
+      ignore-errors: True
