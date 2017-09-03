@@ -15,7 +15,6 @@
     certbot certonly --apache
     {{ letsencrypt_o_cert_name|d() }}
     --domains {{ letsencrypt_cert.domains|join(',') }}
-    --preferred-challenge=http
     --keep-until-expiring --expand
     --quiet --non-interactive --agree-tos
     {{ letsencrypt_o_post_hook|d() }}
