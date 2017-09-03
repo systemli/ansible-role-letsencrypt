@@ -1,11 +1,7 @@
 ---
 
 - include: install.yml
-  when: not letsencrypt_certs|d()
+  when: not letsencrypt_cert|d()
 
 - include: certificate.yml
-  with_items:
-    - "{{ letsencrypt_certs|d([]) }}"
-  loop_control:
-    loop_var: cert
-  when: letsencrypt_certs|d()
+  when: letsencrypt_cert|d()

@@ -16,11 +16,11 @@ Features:
 
 It does the following:
 
-* When invoked with unset/empty variable 'letsencrypt_certs':
+* When invoked with unset/empty variable 'letsencrypt_cert':
   * Installs certbot, registers an account at Let's Encrypt
   * Installs required files/keys for the DNS challenge
   * Creates the system group 'letsencrypt'
-* When invoked with filled variable 'letsencrypt_certs':
+* When invoked with filled variable 'letsencrypt_cert':
   * Requests a SSL certificate via the Let's Encrypt ACME API, either
     using the HTTP challenge or using the DNS challenge
   * Optionally sets the post-hook for certificate renewals to restart
@@ -32,35 +32,40 @@ It does the following:
 
  * Installation of certbot
    ```ansible-playbook site.yml -l localhost -t letsencrypt```
- * Creation of a certificate via HTTP challenge (restarting service 'apache2' at renewal):
-   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_certs":[{"domains":["sub.example.org"],"challenge":"http","services":["apache2"]}]}'```
- * Creation of a certificate via DNS challenge (granting read access to certs to user 'Debian-exim', restarting service 'exim4' at renewal):
-   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_certs":[{"domains":["sub2.example.org"],"challenge":"dns","services":["exim4"],"users":["Debian-exim"]}]}'```
+ * Creation of a certificate via HTTP challenge (restarting service 'apache2' at renewal):  
+   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"domains":["sub.example.org"],"challenge":"dns","services":["dovecot"]}}'```
+ * Creation of a certificate via DNS challenge (granting read access to certs to user 'Debian-exim', restarting service 'exim4' at renewal):  
+   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"domains":["sub2.example.org","sub2.another.exampl.org"],"challenge":"http","services":["apache2","exim4"],"users":["Debian-exim"]}}'```
 
-## Expected structure of variable `letsencrypt_certs`
+## Expected structure of variable `letsencrypt_cert`
 
-The variable `letsencrypt_certs` is expected to be a list of
-dictionaries:
+The variable `letsencrypt_cert` is expected to be a dictionary:
 
 ```
-letsencrypt_certs:
-  - domains:
-      - sub.example.org
-      - sub2.example.org
-    challenge: http
-    services:
-      - apache2
-      - exim4
-    users:
-      - Debian-exim
-  - domains:
-      - sub3.example.org
-    challenge: dns
-    services:
-      - dovecot
+letsencrypt_cert:
+  domains:
+    - sub.example.org
+  challenge: dns
+  services:
+    - dovecot
 ```
 
-The dictionaries have the following keys:
+or:
+
+```
+letsencrypt_cert:
+  domains:
+    - sub2.example.org
+    - sub2.another.example.org
+  challenge: http
+  services:
+    - apache2
+    - exim4
+  users:
+    - Debian-exim
+```
+
+The dictionary supports the following keys:
 
 * domains: list of domains for the certificate [required]
 * challenge: 'http' or 'dns' [required]
@@ -117,8 +122,8 @@ Add the key to your bind config (e.g. at `/etc/bind/named.conf.options`):
 
 ```
 key "_le.example.org_ddns_update" {
-        algorithm hmac-sha512;
-        secret "...";
+	algorithm hmac-sha512;
+	secret "...";
 };
 ```
 
@@ -142,7 +147,11 @@ _le.example.org		IN SOA	ns1.example.org. postmaster.example.org. (
 and configure it in your bind config (e.g. at `/etc/bind/named.conf.local`):
 
 ```
-zone "_le.example.org"       { type master; file "/etc/bind/zones/db._le.example.org"; update-policy { grant _le.example.org.org_ddns_update wildcard *._le.example.org.org. TXT; }; };
+zone "_le.example.org" {
+	type master;
+	file "/etc/bind/zones/db._le.example.org";
+	update-policy { grant _le.example.org.org_ddns_update wildcard *._le.example.org.org. TXT; };
+};
 ```
 
 # Ansible variable defaults
