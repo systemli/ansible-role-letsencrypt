@@ -9,6 +9,10 @@ _disabled:
   - ansible_lint
 ansible:
   playbook: tests/test.yml
+provisioner:
+  name: ansible
+  options:
+    skip_tags: molecule_test_skip
 driver:
   name: docker
 docker:
