@@ -34,7 +34,7 @@
     {{ post_hook|d() }}
   when: letsencrypt_cert.challenge|d() == 'dns' and letsencrypt_cert.domains|d()
 
-- name: register system users
+- name: read in system users
   command: "cut -d: -f1 /etc/passwd"
   register: letsencrypt_reg_system_users
 
