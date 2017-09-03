@@ -2,23 +2,23 @@
 
 - name: prepare post-hook options
   set_fact:
-    post_hook: "--post-hook 'systemctl restart {{ cert.services|join(' ') }}'"
-  when: cert.services|d()
+    letsencrypt_o_post_hook: "--post-hook 'systemctl restart {{ letsencrypt_cert.services|join(' ') }}'"
+  when: letsencrypt_cert.services|d()
 
 - name: register Let's Encrypt certificate with HTTP challenge
   command: >
     certbot certonly --apache
-    --domains {{ cert.domains|join(',') }}
+    --domains {{ letsencrypt_cert.domains|join(',') }}
     --preferred-challenge=http
     --keep-until-expiring --expand
     --quiet --non-interactive --agree-tos
-    {{ post_hook|d() }}
-  when: cert.challenge|d() == 'http' and cert.domains|d()
+    {{ letsencrypt_o_post_hook|d() }}
+  when: letsencrypt_cert.challenge|d() == 'http' and letsencrypt_cert.domains|d()
 
 - name: register Let's Encrypt certificate with DNS challenge
   command: >
     certbot certonly --manual
-    --domains {{ cert.domains|join(',') }}
+    --domains {{ letsencrypt_cert.domains|join(',') }}
     --preferred-challenge=dns
     --keep-until-expiring --expand
     --quiet --non-interactive --agree-tos
@@ -26,7 +26,7 @@
     --manual-auth-hook 'certbot-dns-hook.sh auth'
     --manual-cleanup-hook 'certbot-dns-hook.sh cleanup'
     {{ post_hook|d() }}
-  when: cert.challenge|d() == 'dns' and cert.domains|d()
+  when: letsencrypt_cert.challenge|d() == 'dns' and letsencrypt_cert.domains|d()
 
 - name: register system users
   command: "cut -d: -f1 /etc/passwd"
@@ -37,5 +37,5 @@
     name: "{{ item }}"
     groups: letsencrypt
     append: yes
-  with_items: "{{ cert.users|d([]) }}"
-  when: cert.users|d() and item in letsencrypt_reg_system_users.stdout_lines|d([])
+  with_items: "{{ letsencrypt_cert.users|d([]) }}"
+  when: letsencrypt_cert.users|d() and item in letsencrypt_reg_system_users.stdout_lines|d([])
