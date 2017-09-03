@@ -33,9 +33,9 @@ It does the following:
  * Installation of certbot
    ```ansible-playbook site.yml -l localhost -t letsencrypt```
  * Creation of a certificate via HTTP challenge (restarting service 'apache2' at renewal):  
-   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"domains":["sub.example.org"],"challenge":"dns","services":["dovecot"]}}'```
+   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"name":"sub.example.org","domains":["sub.example.org"],"challenge":"dns","services":["dovecot"]}}'```
  * Creation of a certificate via DNS challenge (granting read access to certs to user 'Debian-exim', restarting service 'exim4' at renewal):  
-   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"domains":["sub2.example.org","sub2.another.exampl.org"],"challenge":"http","services":["apache2","exim4"],"users":["Debian-exim"]}}'```
+   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"name":"sub2","domains":["sub2.example.org","sub2.another.exampl.org"],"challenge":"http","services":["apache2","exim4"],"users":["Debian-exim"]}}'```
 
 ## Expected structure of variable `letsencrypt_cert`
 
@@ -43,6 +43,7 @@ The variable `letsencrypt_cert` is expected to be a dictionary:
 
 ```
 letsencrypt_cert:
+  name: sub.example.org
   domains:
     - sub.example.org
   challenge: dns
@@ -54,6 +55,7 @@ or:
 
 ```
 letsencrypt_cert:
+  name: sub2
   domains:
     - sub2.example.org
     - sub2.another.example.org
@@ -67,6 +69,7 @@ letsencrypt_cert:
 
 The dictionary supports the following keys:
 
+* name: name of the certificate [optional]
 * domains: list of domains for the certificate [required]
 * challenge: 'http' or 'dns' [required]
 * services: list of services to be restarted in the post-hook [optional]
