@@ -1,0 +1,30 @@
+---
+dependency:
+  name: galaxy
+  options: 
+    ignore-certs: True
+    ignore-errors: True
+driver:
+  name: docker
+lint:
+  name: yamllint
+platforms:
+  - name: debian-buster
+    image: debian:buster
+  - name: debian-stretch
+    image: debian:stretch
+  - name: debian-jessie-backports
+    image: debian:jessie-backports
+provisioner:
+  name: ansible
+  options:
+    skip-tags: molecule_test_skip
+  lint:
+    name: ansible-lint
+    enabled: False
+scenario:
+  name: default
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
