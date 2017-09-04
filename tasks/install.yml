@@ -13,53 +13,53 @@
   when: ansible_fqdn in groups.web|d([])
 
 - block:
-  - name: install certbot DNS challenge helper script
-    template:
-      src: certbot-dns-hook.sh.j2
-      dest: /usr/local/bin/certbot-dns-hook.sh
-      owner: root
-      group: root
-      mode: 0755
-  - name: create directory /etc/letsencrypt/keys
-    file:
-      dest: /etc/letsencrypt/keys
-      state: directory
-      owner: root
-      group: root
-      mode: 0700
-  - name: install certbot DNS challenge nsupdate key
-    copy:
-      content: "{{ letsencrypt_ddns_key }}"
-      dest: /etc/letsencrypt/keys/ddns_update.key
-      owner: root
-      group: root
-      mode: 0400
-    when: letsencrypt_ddns_key|d()
-  - name: install certbot DNS challenge nsupdate private key
-    copy:
-      content: "{{ letsencrypt_ddns_privkey }}"
-      dest: /etc/letsencrypt/keys/ddns_update.private
-      owner: root
-      group: root
-      mode: 0400
-    when: letsencrypt_ddns_privkey|d()
+    - name: install certbot DNS challenge helper script
+      template:
+        src: certbot-dns-hook.sh.j2
+        dest: /usr/local/bin/certbot-dns-hook.sh
+        owner: root
+        group: root
+        mode: 0755
+    - name: create directory /etc/letsencrypt/keys
+      file:
+        dest: /etc/letsencrypt/keys
+        state: directory
+        owner: root
+        group: root
+        mode: 0700
+    - name: install certbot DNS challenge nsupdate key
+      copy:
+        content: "{{ letsencrypt_ddns_key }}"
+        dest: /etc/letsencrypt/keys/ddns_update.key
+        owner: root
+        group: root
+        mode: 0400
+      when: letsencrypt_ddns_key|d()
+    - name: install certbot DNS challenge nsupdate private key
+      copy:
+        content: "{{ letsencrypt_ddns_privkey }}"
+        dest: /etc/letsencrypt/keys/ddns_update.private
+        owner: root
+        group: root
+        mode: 0400
+      when: letsencrypt_ddns_privkey|d()
   when: letsencrypt_dns_challenge|d(True)
 
 - block:
-  - name: add system group 'letsencrypt'
-    group:
-      name: letsencrypt
-      system: true
-  - name: adjust permissions for certificate directories
-    file:
-      path: "{{ item }}"
-      state: directory
-      owner: root
-      group: letsencrypt
-      mode: 0750
-    with_items:
-      - /etc/letsencrypt/archive
-      - /etc/letsencrypt/live
+    - name: add system group 'letsencrypt'
+      group:
+        name: letsencrypt
+        system: true
+    - name: adjust permissions for certificate directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: letsencrypt
+        mode: 0750
+      with_items:
+        - /etc/letsencrypt/archive
+        - /etc/letsencrypt/live
   when: letsencrypt_group|d(True)
 
 - name: check if letsencrypt_account_email is set
