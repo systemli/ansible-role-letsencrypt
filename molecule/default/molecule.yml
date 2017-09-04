@@ -8,6 +8,7 @@ driver:
   name: docker
 lint:
   name: yamllint
+  enabled: False
 platforms:
   - name: debian-buster
     image: debian:buster
