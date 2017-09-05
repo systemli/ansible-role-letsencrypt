@@ -23,6 +23,7 @@
 - name: register Let's Encrypt certificate with DNS challenge
   command: >
     certbot certonly --manual
+    {{ letsencrypt_o_cert_name|d() }}
     --domains {{ letsencrypt_cert.domains|join(',') }}
     --preferred-challenge=dns
     --keep-until-expiring --expand
