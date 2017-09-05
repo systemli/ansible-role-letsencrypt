@@ -153,7 +153,7 @@ and configure it in your bind config (e.g. at `/etc/bind/named.conf.local`):
 zone "_le.example.org" {
 	type master;
 	file "/etc/bind/zones/db._le.example.org";
-	update-policy { grant _le.example.org.org_ddns_update wildcard *._le.example.org.org. TXT; };
+	update-policy { grant _le.example.org_ddns_update wildcard *._le.example.org. TXT; };
 };
 ```
 
