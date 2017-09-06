@@ -8,18 +8,18 @@ being used.
 Requirements
 ============
 
-* Ansible 2.2
+* Ansible 2.2 or higher
 * Docker Engine
 * docker-py
 
-Install OS dependencies on CentOS 7
+Install OS dependencies on Debian 9 (Stretch)
 
 .. code-block:: bash
 
-  $ sudo yum install -y epel-release
-  $ sudo yum install -y gcc python-pip python-devel openssl-devel
-  # If installing Molecule from source.
-  $ sudo yum install libffi-devel git
+  # apt-get update
+  # apt-get install -y python-pip libssl-dev python-docker
+  ## If installing Molecule from source.
+  # apt-get install -y libffi-dev git
 
 Install OS dependencies on Ubuntu 16.x
 
@@ -29,13 +29,6 @@ Install OS dependencies on Ubuntu 16.x
   $ sudo apt-get install -y python-pip libssl-dev docker-engine
   # If installing Molecule from source.
   $ sudo apt-get install -y libffi-dev git
-
-Install OS dependencies on Mac OS
-
-.. code-block:: bash
-
-  $ brew install python
-  $ brew install git
 
 Install using pip:
 
