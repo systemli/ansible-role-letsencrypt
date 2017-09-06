@@ -10,8 +10,6 @@ lint:
   name: yamllint
   enabled: False
 platforms:
-  - name: debian-buster
-    image: debian:buster
   - name: debian-stretch
     image: debian:stretch
   - name: debian-jessie-backports
