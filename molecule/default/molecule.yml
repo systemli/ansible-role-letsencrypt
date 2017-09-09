@@ -1,9 +1,6 @@
 ---
 dependency:
   name: galaxy
-  options: 
-    ignore-certs: True
-    ignore-errors: True
 driver:
   name: docker
 lint:
@@ -11,9 +8,17 @@ lint:
   enabled: False
 platforms:
   - name: debian-stretch
-    image: debian:stretch
-  - name: debian-jessie-backports
-    image: debian:jessie-backports
+    image: geerlingguy/docker-debian9-ansible
+    privileged: True
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    command: /lib/systemd/systemd
+  - name: debian-jessie
+    image: geerlingguy/docker-debian8-ansible
+    privileged: True
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    command: /lib/systemd/systemd
 provisioner:
   name: ansible
   options:
