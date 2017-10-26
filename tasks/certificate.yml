@@ -15,7 +15,7 @@
     certbot certonly --apache
     {{ letsencrypt_o_cert_name|d() }}
     --domains {{ letsencrypt_cert.domains|join(',') }}
-    --keep-until-expiring --expand
+    --keep-until-expiring --expand --allow-subset-of-names
     --quiet --non-interactive --agree-tos
     {{ letsencrypt_o_post_hook|d() }}
   when: letsencrypt_cert.challenge|d() == 'http' and letsencrypt_cert.domains|d()
@@ -26,7 +26,7 @@
     {{ letsencrypt_o_cert_name|d() }}
     --domains {{ letsencrypt_cert.domains|join(',') }}
     --preferred-challenge=dns
-    --keep-until-expiring --expand
+    --keep-until-expiring --expand --allow-subset-of-names
     --quiet --non-interactive --agree-tos
     --manual-public-ip-logging-ok
     --manual-auth-hook 'certbot-dns-hook.sh auth'
