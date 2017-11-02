@@ -7,7 +7,7 @@
 
 - name: prepare optional test cert option
   set_fact:
-    letsencrypt_opt_test_cert: "{{ letsencrypt_test|ternary('--test-cert','') }}"
+    letsencrypt_opt_test_cert: "{{ letsencrypt_test|d()|ternary('--test-cert','') }}"
 
 - name: prepare post-hook options
   set_fact:
