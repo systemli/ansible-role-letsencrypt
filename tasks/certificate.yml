@@ -2,28 +2,34 @@
 
 - name: prepare cert name option
   set_fact:
-    letsencrypt_o_cert_name: "--cert-name {{ letsencrypt_cert.name }}"
+    letsencrypt_opt_cert_name: "--cert-name {{ letsencrypt_cert.name }}"
   when: letsencrypt_cert.name|d()
+
+- name: prepare optional test cert option
+  set_fact:
+    letsencrypt_opt_test_cert: "{{ letsencrypt_test|ternary('--test-cert','') }}"
 
 - name: prepare post-hook options
   set_fact:
-    letsencrypt_o_post_hook: "--post-hook 'systemctl restart {{ letsencrypt_cert.services|join(' ') }}'"
+    letsencrypt_opt_post_hook: "--post-hook 'systemctl restart {{ letsencrypt_cert.services|join(' ') }}'"
   when: letsencrypt_cert.services|d()
 
 - name: register Let's Encrypt certificate with HTTP challenge
   command: >
     certbot certonly --apache
-    {{ letsencrypt_o_cert_name|d() }}
+    {{ letsencrypt_opt_cert_name|d() }}
+    {{ letsencrypt_opt_test_cert|d() }}
     --domains {{ letsencrypt_cert.domains|join(',') }}
     --keep-until-expiring --expand --allow-subset-of-names
     --quiet --non-interactive --agree-tos
-    {{ letsencrypt_o_post_hook|d() }}
+    {{ letsencrypt_opt_post_hook|d() }}
   when: letsencrypt_cert.challenge|d() == 'http' and letsencrypt_cert.domains|d()
 
 - name: register Let's Encrypt certificate with DNS challenge
   command: >
     certbot certonly --manual
-    {{ letsencrypt_o_cert_name|d() }}
+    {{ letsencrypt_opt_cert_name|d() }}
+    {{ letsencrypt_opt_test_cert|d() }}
     --domains {{ letsencrypt_cert.domains|join(',') }}
     --preferred-challenge=dns
     --keep-until-expiring --expand --allow-subset-of-names
@@ -31,7 +37,7 @@
     --manual-public-ip-logging-ok
     --manual-auth-hook 'certbot-dns-hook.sh auth'
     --manual-cleanup-hook 'certbot-dns-hook.sh cleanup'
-    {{ post_hook|d() }}
+    {{ letsencrypt_opt_post_hook|d() }}
   when: letsencrypt_cert.challenge|d() == 'dns' and letsencrypt_cert.domains|d()
 
 - name: read in system users

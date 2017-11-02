@@ -174,6 +174,11 @@ letsencrypt_dns_challenge: yes
 letsencrypt_group: yes
 ```
 
+## Testing
+
+For testing purposes, variable 'letsencrypt_test' can be set. In this case,
+the role will use Let's Encrypt's test servers for obtaining the certificate.
+
 ## License
 
 This Ansible role is licensed under the GNU GPLv3.
