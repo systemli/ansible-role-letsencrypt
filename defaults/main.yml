@@ -3,6 +3,12 @@
 # Set the email address associated with the Let's Encrypt account
 letsencrypt_account_email: ""
 
+# Default authenticator for the HTTP challenge ('webroot' or 'apache')
+letsencrypt_http_auth: webroot
+
+# Default webroot path for the authenticator 'webroot'
+letsencrypt_webroot_path: /var/www
+
 # Install the DNS challenge helper script and DNS update key
 letsencrypt_dns_challenge: yes
 
