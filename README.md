@@ -8,6 +8,8 @@ using the HTTP or the DNS challenge for their ACME API.
 Features:
 * Installs and configures certbot and the DNS challenge helper script
 * Supports both the HTTP and the DNS challenge
+  * For HTTP challenge, `webroot` and `apache` authenticator plugins
+    are supported
 * The DNS challenge uses a dedicated zone for AMCE challenge tokens
   only, lowering the security risks of dynamic updates. The concept
   is explained [here](https://www.crc.id.au/using-centralised-management-with-lets-encrypt/)
@@ -25,17 +27,20 @@ It does the following:
     using the HTTP challenge or using the DNS challenge
   * Optionally sets the post-hook for certificate renewals to restart
     required services afterwards
-  * Optionally adds system users to the 'letsencrypt' system group to grant
-    them read access to the SSL certificates and their private keys
+  * Optionally adds system users to the 'letsencrypt' system group to
+    grant them read access to the SSL certificates and their private keys
 
 ## How it works (examples)
 
  * Installation of certbot
    ```ansible-playbook site.yml -l localhost -t letsencrypt```
- * Creation of a certificate via HTTP challenge (restarting service 'apache2' at renewal):  
-   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"name":"sub.example.org","domains":["sub.example.org"],"challenge":"dns","services":["dovecot"]}}'```
- * Creation of a certificate via DNS challenge (granting read access to certs to user 'Debian-exim', restarting service 'exim4' at renewal):  
-   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"name":"sub2","domains":["sub2.example.org","sub2.another.exampl.org"],"challenge":"http","services":["apache2","exim4"],"users":["Debian-exim"]}}'```
+ * Creation of a certificate via HTTP challenge and with `webroot`
+   authenticator (restarting service 'apache2' at renewal):  
+   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"name":"sub.example.org","domains":["sub.example.org"],"challenge":"http","http_auth":"webroot","webroot_path":"/var/www/sub.example.org","services":["apache2"]}}'```
+ * Creation of a certificate via DNS challenge (granting read access to
+   certs to user 'Debian-exim', restarting services 'exim4' and 'dovecot`
+   at renewal):  
+   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"name":"sub2","domains":["sub2.example.org","sub2.another.example.org"],"challenge":"dns","services":["dovecot","exim4"],"users":["Debian-exim"]}}'```
 
 ## Expected structure of variable `letsencrypt_cert`
 
@@ -46,9 +51,11 @@ letsencrypt_cert:
   name: sub.example.org
   domains:
     - sub.example.org
-  challenge: dns
+  challenge: http
+  http_auth: webroot
+  webroot_path: /var/www/sub.example.org
   services:
-    - dovecot
+    - apache2
 ```
 
 or:
@@ -59,9 +66,9 @@ letsencrypt_cert:
   domains:
     - sub2.example.org
     - sub2.another.example.org
-  challenge: http
+  challenge: dns
   services:
-    - apache2
+    - dovecot
     - exim4
   users:
     - Debian-exim
@@ -69,11 +76,13 @@ letsencrypt_cert:
 
 The dictionary supports the following keys:
 
-* name: name of the certificate [optional]
-* domains: list of domains for the certificate [required]
-* challenge: 'http' or 'dns' [required]
-* services: list of services to be restarted in the post-hook [optional]
-* users: list of users to be added to system group 'letsencrypt' [optional]
+* `name`: name of the certificate [optional]
+* `domains`: list of domains for the certificate [required]
+* `challenge`: 'http' or 'dns' [required]
+  * for challenge 'http': `http_auth`: 'webroot' or 'apache' [optional, default 'webroot']
+    * for http_auth 'webroot': `webroot_path` [optional, default '/var/www']
+* `services`: list of services to be restarted in the post-hook [optional]
+* `users`: list of users to be added to system group 'letsencrypt' [optional]
 
 ## General Preliminaries
 
@@ -87,9 +96,10 @@ earlier versions of Ansible.
 ## The HTTP challenge
 
 Requirements:
-* Apache needs to be installed (and configured) on the system
-* The domain name(s) of the requested certificate should point
+* The domain name(s) of the requested certificate has to point
   to the system
+* For http_auth 'apache', Apache2 has to be installed (and configured)
+  on the system
 
 ## The DNS challenge
 

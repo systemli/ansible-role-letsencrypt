@@ -1,5 +1,15 @@
 ---
 
+- name: prepare authenticator options for webroot
+  set_fact:
+    letsencrypt_opt_http_auth: "--webroot --webroot-path {{ letsencrypt_cert.webroot_path|d(letsencrypt_webroot_path) }}"
+  when: letsencrypt_cert.http_auth|d(letsencrypt_http_auth) == 'webroot'
+
+- name: prepare authenticator options for apache
+  set_fact:
+    letsencrypt_opt_http_auth: "--apache"
+  when: letsencrypt_cert.http_auth|d(letsencrypt_http_auth) == 'apache'
+
 - name: prepare cert name option
   set_fact:
     letsencrypt_opt_cert_name: "--cert-name {{ letsencrypt_cert.name }}"
@@ -16,7 +26,8 @@
 
 - name: register Let's Encrypt certificate with HTTP challenge
   command: >
-    certbot certonly --apache
+    certbot certonly
+    {{ letsencrypt_opt_http_auth|d() }}
     {{ letsencrypt_opt_cert_name|d() }}
     {{ letsencrypt_opt_test_cert|d() }}
     --domains {{ letsencrypt_cert.domains|join(',') }}
