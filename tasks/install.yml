@@ -74,9 +74,14 @@
     path: /etc/letsencrypt/accounts
   register: letsencrypt_reg_accounts_dir
 
+- name: prepare optional test cert option
+  set_fact:
+    letsencrypt_opt_test_cert: "{{ letsencrypt_test|d()|ternary('--test-cert','') }}"
+
 - name: create Let's Encrypt account
   command: >
     certbot register
+    {{ letsencrypt_opt_test_cert|d() }}
     --email "{{ letsencrypt_account_email|d() }}"
     --non-interactive --agree-tos --quiet
   when: not letsencrypt_reg_accounts_dir.stat.exists
