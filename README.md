@@ -186,8 +186,9 @@ letsencrypt_group: yes
 
 ## Testing
 
-For testing purposes, variable 'letsencrypt_test' can be set. If `letsencrypt_test: True`
-the role will use Let's Encrypts test servers for obtaining the certificate or creating the user.
+For testing purposes, variable 'letsencrypt_test' can be set. If set to
+True, the role will use Let's Encrypt test servers for account creation
+and obtaining the certificate.
 
 ## License
 
