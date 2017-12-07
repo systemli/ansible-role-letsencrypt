@@ -54,6 +54,7 @@
 - name: read in system users
   command: "cut -d: -f1 /etc/passwd"
   register: letsencrypt_reg_system_users
+  changed_when: False
 
 - name: add users to letsencrypt system group
   user:
