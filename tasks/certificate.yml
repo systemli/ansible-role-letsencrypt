@@ -32,9 +32,11 @@
     {{ letsencrypt_opt_test_cert|d() }}
     --domains {{ letsencrypt_cert.domains|join(',') }}
     --keep-until-expiring --expand --allow-subset-of-names
-    --quiet --non-interactive --agree-tos
+    --non-interactive --agree-tos
     {{ letsencrypt_opt_post_hook|d() }}
   when: letsencrypt_cert.challenge|d() == 'http' and letsencrypt_cert.domains|d()
+  register: letsencrypt_reg_certbot_http
+  changed_when: not "no action taken" in letsencrypt_reg_certbot_http.stdout
 
 - name: register Let's Encrypt certificate with DNS challenge
   command: >
@@ -44,12 +46,14 @@
     --domains {{ letsencrypt_cert.domains|join(',') }}
     --preferred-challenge=dns
     --keep-until-expiring --expand --allow-subset-of-names
-    --quiet --non-interactive --agree-tos
+    --non-interactive --agree-tos
     --manual-public-ip-logging-ok
     --manual-auth-hook 'certbot-dns-hook.sh auth'
     --manual-cleanup-hook 'certbot-dns-hook.sh cleanup'
     {{ letsencrypt_opt_post_hook|d() }}
   when: letsencrypt_cert.challenge|d() == 'dns' and letsencrypt_cert.domains|d()
+  register: letsencrypt_reg_certbot_dns
+  changed_when: not "no action taken" in letsencrypt_reg_certbot_dns.stdout
 
 - name: read in system users
   command: "cut -d: -f1 /etc/passwd"
