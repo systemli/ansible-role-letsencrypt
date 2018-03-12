@@ -173,8 +173,19 @@ zone "_le.example.org" {
 # Set the email address associated with the Let's Encrypt account
 letsencrypt_account_email: ""
 
-# Install the DNS challenge helper script
+# Default authenticator for the HTTP challenge ('webroot' or 'apache')
+letsencrypt_http_auth: webroot
+
+# Default webroot path for the authenticator 'webroot'
+letsencrypt_webroot_path: /var/www
+
+# Default group name of the webservers in the inventory file 
+letsencrypt_webserver_groupname: web
+
+# Install the DNS challenge helper script and DNS update key
 letsencrypt_dns_challenge: yes
+
+# Settings for the dynamic DNS zone updates
 #letsencrypt_ddns_server: ""
 #letsencrypt_ddns_zone: ""
 #letsencrypt_ddns_key: ""
