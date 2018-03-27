@@ -1,14 +1,19 @@
 ---
 
-- name: prepare authenticator options for webroot
-  set_fact:
-    letsencrypt_opt_http_auth: "--webroot --webroot-path {{ letsencrypt_cert.webroot_path|d(letsencrypt_webroot_path) }}"
-  when: letsencrypt_cert.http_auth|d(letsencrypt_http_auth) == 'webroot'
-
 - name: prepare authenticator options for apache
   set_fact:
     letsencrypt_opt_http_auth: "--apache"
   when: letsencrypt_cert.http_auth|d(letsencrypt_http_auth) == 'apache'
+
+- name: prepare authenticator options for standalone
+  set_fact:
+    letsencrypt_opt_http_auth: "--standalone"
+  when: letsencrypt_cert.http_auth|d(letsencrypt_http_auth) == 'standalone'
+
+- name: prepare authenticator options for webroot
+  set_fact:
+    letsencrypt_opt_http_auth: "--webroot --webroot-path {{ letsencrypt_cert.webroot_path|d(letsencrypt_webroot_path) }}"
+  when: letsencrypt_cert.http_auth|d(letsencrypt_http_auth) == 'webroot'
 
 - name: prepare cert name option
   set_fact:
@@ -19,10 +24,15 @@
   set_fact:
     letsencrypt_opt_test_cert: "{{ letsencrypt_test|d()|ternary('--test-cert','') }}"
 
-- name: prepare post-hook options
+- name: prepare post-hook options #1
+  set_fact:
+    letsencrypt_opt_post_hook: "--post-hook '{{ letsencrypt_cert.post_hook }}'"
+  when: letsencrypt_cert.post_hook|d()
+
+- name: prepare post-hook options #2
   set_fact:
     letsencrypt_opt_post_hook: "--post-hook 'systemctl restart {{ letsencrypt_cert.services|join(' ') }}'"
-  when: letsencrypt_cert.services|d()
+  when: not letsencrypt_cert.post_hook|d() and letsencrypt_cert.services|d()
 
 - name: register Let's Encrypt certificate with HTTP challenge
   command: >
