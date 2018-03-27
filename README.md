@@ -8,12 +8,13 @@ using the HTTP or the DNS challenge for their ACME API.
 Features:
 * Installs and configures certbot and the DNS challenge helper script
 * Supports both the HTTP and the DNS challenge
-  * For HTTP challenge, `webroot` and `apache` authenticator plugins
-    are supported
+  * For HTTP challenge, the authenticator plugins `apache`, `standalone`
+    and `webroot` are supported
 * The DNS challenge uses a dedicated zone for AMCE challenge tokens
   only, lowering the security risks of dynamic updates. The concept
   is explained [here](https://www.crc.id.au/using-centralised-management-with-lets-encrypt/)
-* Restart of services at certificate renewal using post-hooks
+* Restart of services at certificate renewal using post-hooks or custom
+  post-hook command
 * Permission control to certificates using a dedicated system group
 
 It does the following:
@@ -25,8 +26,8 @@ It does the following:
 * When invoked with filled variable 'letsencrypt_cert':
   * Requests a SSL certificate via the Let's Encrypt ACME API, either
     using the HTTP challenge or using the DNS challenge
-  * Optionally sets the post-hook for certificate renewals to restart
-    required services afterwards
+  * Optionally sets the post-hook for certificate renewals (to restart
+    required services afterwards)
   * Optionally adds system users to the 'letsencrypt' system group to
     grant them read access to the SSL certificates and their private keys
 
@@ -41,6 +42,9 @@ It does the following:
    certs to user 'Debian-exim', restarting services 'exim4' and 'dovecot`
    at renewal):  
    ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"name":"sub2","domains":["sub2.example.org","sub2.another.example.org"],"challenge":"dns","services":["dovecot","exim4"],"users":["Debian-exim"]}}'```
+ * Creation of a certificate via HTTP challenge and with `standalone`
+   authenticator (running a custom post-hook script at renewal):
+   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"name":"sub3","domains":["sub3.example.org"],"challenge":"http","http_auth":"standalone","post_hook":"/usr/local/bin/cert-post-hook.sh"}}'```
 
 ## Expected structure of variable `letsencrypt_cert`
 
@@ -74,6 +78,18 @@ letsencrypt_cert:
     - Debian-exim
 ```
 
+or:
+
+```
+letsencrypt_cert:
+  name: sub3
+  domains:
+    - sub3.example.org
+  challenge: http
+  http_auth: standalone
+  post_hook: "/usr/local/bin/cert-post-hook.sh"
+```
+
 The dictionary supports the following keys:
 
 * `name`: name of the certificate [optional]
@@ -82,6 +98,7 @@ The dictionary supports the following keys:
   * for challenge 'http': `http_auth`: 'webroot' or 'apache' [optional, default 'webroot']
     * for http_auth 'webroot': `webroot_path` [optional, default '/var/www']
 * `services`: list of services to be restarted in the post-hook [optional]
+* `post_hook`: Custom post-hook to be executed after certificate renewal [optional]
 * `users`: list of users to be added to system group 'letsencrypt' [optional]
 
 ## General Preliminaries
@@ -207,4 +224,4 @@ This Ansible role is licensed under the GNU GPLv3.
 
 ## Author
 
-Copyright 2017 systemli.org (https://www.systemli.org/)
+Copyright 2017-2018 systemli.org (https://www.systemli.org/)
