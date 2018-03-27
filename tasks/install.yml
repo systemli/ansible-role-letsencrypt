@@ -11,8 +11,6 @@
     pkg: python-certbot-apache
     state: present
   when: ansible_fqdn in groups[letsencrypt_webserver_groupname]|d([])
-  tags:
-    - webgroupnametest
 
 - block:
     - name: install certbot DNS challenge helper script
