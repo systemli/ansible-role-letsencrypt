@@ -65,9 +65,7 @@
 - name: check if letsencrypt_account_email is set
   fail:
     msg: "Error: letsencrypt_account_email required for account creation"
-  when: not letsencrypt_account_email|d()
-  tags:
-    - molecule_test_skip
+  when: not letsencrypt_account_email|d() and not __testing|default()
 
 - name: check if a Let's Encrypt account exists
   stat:
@@ -84,6 +82,4 @@
     {{ letsencrypt_opt_test_cert|d() }}
     --email "{{ letsencrypt_account_email|d() }}"
     --non-interactive --agree-tos --quiet
-  when: not letsencrypt_reg_accounts_dir.stat.exists
-  tags:
-    - molecule_test_skip
+  when: not letsencrypt_reg_accounts_dir.stat.exists and not __testing|default()
