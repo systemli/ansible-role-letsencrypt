@@ -1,0 +1,6 @@
+---
+- hosts: all
+  roles:
+    - role_under_test
+  vars:
+    __testing: True

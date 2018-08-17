@@ -1,14 +1,17 @@
 ---
-sudo: required
-language: python
-services:
-  - docker
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-ce
-install:
-  - pip install tox-travis
+services: docker
+
+env:
+  - distro: debian8
+  - distro: debian9
+
 script:
-  - tox
+  # Download test shim.
+  - wget -O ${PWD}/tests/test.sh https://gist.githubusercontent.com/geerlingguy/73ef1e5ee45d8694570f334be385e181/raw/
+  - chmod +x ${PWD}/tests/test.sh
+
+  # Run tests.
+  - ${PWD}/tests/test.sh
+
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
