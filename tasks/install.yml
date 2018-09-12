@@ -10,7 +10,7 @@
   apt:
     pkg: python-certbot-apache
     state: present
-  when: ansible_fqdn in groups[letsencrypt_webserver_groupname]|d([])
+  when: ansible_fqdn in groups[letsencrypt_webserver_groupname]|default([])
 
 - block:
     - name: install certbot DNS challenge helper script
@@ -34,7 +34,7 @@
         owner: root
         group: root
         mode: 0400
-      when: letsencrypt_ddns_key|d()
+      when: letsencrypt_ddns_key|default()
     - name: install certbot DNS challenge nsupdate private key
       copy:
         content: "{{ letsencrypt_ddns_privkey }}"
@@ -42,8 +42,8 @@
         owner: root
         group: root
         mode: 0400
-      when: letsencrypt_ddns_privkey|d()
-  when: letsencrypt_dns_challenge|d(True)
+      when: letsencrypt_ddns_privkey|default()
+  when: letsencrypt_dns_challenge|default(True)
 
 - block:
     - name: add system group 'letsencrypt'
@@ -60,12 +60,12 @@
       with_items:
         - /etc/letsencrypt/archive
         - /etc/letsencrypt/live
-  when: letsencrypt_group|d(True)
+  when: letsencrypt_group|default(True)
 
 - name: check if letsencrypt_account_email is set
   fail:
     msg: "Error: letsencrypt_account_email required for account creation"
-  when: not letsencrypt_account_email|d() and not __testing|default()
+  when: not letsencrypt_account_email|default() and not __testing|default()
 
 - name: check if a Let's Encrypt account exists
   stat:
@@ -74,12 +74,13 @@
 
 - name: prepare optional test cert option
   set_fact:
-    letsencrypt_opt_test_cert: "{{ letsencrypt_test|d()|ternary('--test-cert','') }}"
+    letsencrypt_opt_test_cert: "{{ letsencrypt_test|default()|ternary('--test-cert','') }}"
 
 - name: create Let's Encrypt account
   command: >
     certbot register
-    {{ letsencrypt_opt_test_cert|d() }}
-    --email "{{ letsencrypt_account_email|d() }}"
+    {{ letsencrypt_opt_test_cert|default() }}
+    {{ letsencrypt_opts_extra|default() }}
+    --email "{{ letsencrypt_account_email|default() }}"
     --non-interactive --agree-tos --quiet
   when: not letsencrypt_reg_accounts_dir.stat.exists and not __testing|default()
