@@ -57,6 +57,7 @@ letsencrypt_cert:
     - sub.example.org
   challenge: http
   http_auth: webroot
+  opts_extra: "--register-unsafely-without-email"
   webroot_path: /var/www/sub.example.org
   services:
     - apache2
@@ -210,6 +211,9 @@ letsencrypt_dns_challenge: yes
 
 # Create system group 'letsencrypt' for access to certificates
 letsencrypt_group: yes
+
+# Set global extra commandline options for certbot
+letsencrypt_opts_extra: ""
 ```
 
 ## Testing

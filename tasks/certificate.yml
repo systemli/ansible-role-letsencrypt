@@ -3,56 +3,57 @@
 - name: prepare authenticator options for apache
   set_fact:
     letsencrypt_opt_http_auth: "--apache"
-  when: letsencrypt_cert.http_auth|d(letsencrypt_http_auth) == 'apache'
+  when: letsencrypt_cert.http_auth|default(letsencrypt_http_auth) == 'apache'
 
 - name: prepare authenticator options for standalone
   set_fact:
     letsencrypt_opt_http_auth: "--standalone"
-  when: letsencrypt_cert.http_auth|d(letsencrypt_http_auth) == 'standalone'
+  when: letsencrypt_cert.http_auth|default(letsencrypt_http_auth) == 'standalone'
 
 - name: prepare authenticator options for webroot
   set_fact:
-    letsencrypt_opt_http_auth: "--webroot --webroot-path {{ letsencrypt_cert.webroot_path|d(letsencrypt_webroot_path) }}"
-  when: letsencrypt_cert.http_auth|d(letsencrypt_http_auth) == 'webroot'
+    letsencrypt_opt_http_auth: "--webroot --webroot-path {{ letsencrypt_cert.webroot_path|default(letsencrypt_webroot_path) }}"
+  when: letsencrypt_cert.http_auth|default(letsencrypt_http_auth) == 'webroot'
 
 - name: prepare cert name option
   set_fact:
     letsencrypt_opt_cert_name: "--cert-name {{ letsencrypt_cert.name }}"
-  when: letsencrypt_cert.name|d()
+  when: letsencrypt_cert.name|default()
 
 - name: prepare optional test cert option
   set_fact:
-    letsencrypt_opt_test_cert: "{{ letsencrypt_test|d()|ternary('--test-cert','') }}"
+    letsencrypt_opt_test_cert: "{{ letsencrypt_test|default()|ternary('--test-cert','') }}"
 
 - name: prepare post-hook options #1
   set_fact:
     letsencrypt_opt_post_hook: "--post-hook '{{ letsencrypt_cert.post_hook }}'"
-  when: letsencrypt_cert.post_hook|d()
+  when: letsencrypt_cert.post_hook|default()
 
 - name: prepare post-hook options #2
   set_fact:
     letsencrypt_opt_post_hook: "--post-hook 'systemctl restart {{ letsencrypt_cert.services|join(' ') }}'"
-  when: not letsencrypt_cert.post_hook|d() and letsencrypt_cert.services|d()
+  when: not letsencrypt_cert.post_hook|default() and letsencrypt_cert.services|default()
 
 - name: register Let's Encrypt certificate with HTTP challenge
   command: >
     certbot certonly
-    {{ letsencrypt_opt_http_auth|d() }}
-    {{ letsencrypt_opt_cert_name|d() }}
-    {{ letsencrypt_opt_test_cert|d() }}
+    {{ letsencrypt_opt_http_auth|default() }}
+    {{ letsencrypt_opt_cert_name|default() }}
+    {{ letsencrypt_opt_test_cert|default() }}
+    {{ letsencrypt_cert.opts_extra|default(letsencrypt_opts_extra|default()) }}
     --domains {{ letsencrypt_cert.domains|join(',') }}
     --keep-until-expiring --expand --allow-subset-of-names
     --non-interactive --agree-tos
-    {{ letsencrypt_opt_post_hook|d() }}
-  when: letsencrypt_cert.challenge|d() == 'http' and letsencrypt_cert.domains|d()
+    {{ letsencrypt_opt_post_hook|default() }}
+  when: letsencrypt_cert.challenge|default() == 'http' and letsencrypt_cert.domains|default()
   register: letsencrypt_reg_certbot_http
   changed_when: not "no action taken" in letsencrypt_reg_certbot_http.stdout
 
 - name: register Let's Encrypt certificate with DNS challenge
   command: >
     certbot certonly --manual
-    {{ letsencrypt_opt_cert_name|d() }}
-    {{ letsencrypt_opt_test_cert|d() }}
+    {{ letsencrypt_opt_cert_name|default() }}
+    {{ letsencrypt_opt_test_cert|default() }}
     --domains {{ letsencrypt_cert.domains|join(',') }}
     --preferred-challenge=dns
     --keep-until-expiring --expand --allow-subset-of-names
@@ -60,8 +61,8 @@
     --manual-public-ip-logging-ok
     --manual-auth-hook 'certbot-dns-hook.sh auth'
     --manual-cleanup-hook 'certbot-dns-hook.sh cleanup'
-    {{ letsencrypt_opt_post_hook|d() }}
-  when: letsencrypt_cert.challenge|d() == 'dns' and letsencrypt_cert.domains|d()
+    {{ letsencrypt_opt_post_hook|default() }}
+  when: letsencrypt_cert.challenge|default() == 'dns' and letsencrypt_cert.domains|default()
   register: letsencrypt_reg_certbot_dns
   changed_when: not "no action taken" in letsencrypt_reg_certbot_dns.stdout
 
@@ -75,5 +76,5 @@
     name: "{{ item }}"
     groups: letsencrypt
     append: yes
-  with_items: "{{ letsencrypt_cert.users|d([]) }}"
-  when: letsencrypt_cert.users|d() and item in letsencrypt_reg_system_users.stdout_lines|d([])
+  with_items: "{{ letsencrypt_cert.users|default([]) }}"
+  when: letsencrypt_cert.users|default() and item in letsencrypt_reg_system_users.stdout_lines|default([])
