@@ -64,8 +64,11 @@
 
 - name: check if letsencrypt_account_email is set
   fail:
-    msg: "Error: letsencrypt_account_email required for account creation"
-  when: not letsencrypt_account_email|default() and not __testing|default()
+    msg: "Error: either set letsencrypt_account_email or add '--register-unsafely-without-email' to letsencrypt_opts_extra"
+  when:
+    - not '--register-unsafely-without-email' in letsencrypt_opts_extra|default()
+    - not __testing|default()
+    - not letsencrypt_account_email|default()
 
 - name: check if a Let's Encrypt account exists
   stat:
@@ -74,13 +77,17 @@
 
 - name: prepare optional test cert option
   set_fact:
+    letsencrypt_opt_email: "{{ letsencrypt_account_email|default()|ternary('--email ' + letsencrypt_account_email,'') }}"
+
+- name: prepare optional test cert option
+  set_fact:
     letsencrypt_opt_test_cert: "{{ letsencrypt_test|default()|ternary('--test-cert','') }}"
 
 - name: create Let's Encrypt account
   command: >
     certbot register
-    {{ letsencrypt_opt_test_cert|default() }}
+    {{ letsencrypt_opt_test_cert }}
+    {{ letsencrypt_opt_email }}
     {{ letsencrypt_opts_extra|default() }}
-    --email "{{ letsencrypt_account_email|default() }}"
     --non-interactive --agree-tos --quiet
   when: not letsencrypt_reg_accounts_dir.stat.exists and not __testing|default()
