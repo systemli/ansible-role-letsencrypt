@@ -1,4 +1,9 @@
 ---
+- name: install nsupdate which is used by the certbot auth-hook
+  apt:
+    pkg: dnsutils
+    state: present
+  when: letsencrypt_cert.challenge|default() == 'dns'
 
 - name: install Let's Encrypt Certbot client
   apt:
