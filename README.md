@@ -185,6 +185,27 @@ zone "_le.example.org" {
 };
 ```
 
+Format for `/etc/letsencrypt/keys/ddns_update.key` (from bind)
+
+```
+key "<key>" {
+    algorithm HMAC-SHA512;
+    secret "<key>";
+};
+```
+
+Format for `/etc/letsencrypt/keys/ddns_update.private`
+
+```
+Private-key-format: v1.3
+Algorithm: 165 (HMAC_SHA512)
+Key: <key>
+Bits: AAA=
+Created: 20181017144534
+Publish: 20181017144534
+Activate: 20181017144534
+```
+
 # Ansible variable defaults
 
 ```
