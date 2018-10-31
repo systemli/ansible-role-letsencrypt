@@ -3,7 +3,7 @@
   apt:
     pkg: dnsutils
     state: present
-  when: letsencrypt_cert.challenge|default() == 'dns'
+  when: letsencrypt_cert is defined and letsencrypt_cert.challenge|default() == 'dns'
 
 - name: install Let's Encrypt Certbot client
   apt:
