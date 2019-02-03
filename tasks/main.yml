@@ -1,7 +1,8 @@
 ---
 
-- include: install.yml
-  when: not letsencrypt_cert|d()
+- name: Install when letsencrypt_cert is not defined
+  set_fact:
+    letsencrypt_mode: install
+  when: letsencrypt_cert is not defined
 
-- include: certificate.yml
-  when: letsencrypt_cert|d()
+- include_tasks: "{{ letsencrypt_mode }}.yml"

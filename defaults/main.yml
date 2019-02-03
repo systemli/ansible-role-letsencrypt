@@ -1,5 +1,8 @@
 ---
 
+# default action to execute: install or certificate
+letsencrypt_mode: certificate
+
 # Set the email address associated with the Let's Encrypt account
 letsencrypt_account_email: ""
 
