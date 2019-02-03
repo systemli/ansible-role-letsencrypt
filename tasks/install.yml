@@ -1,21 +1,6 @@
 ---
-- name: install nsupdate which is used by the certbot auth-hook
-  apt:
-    pkg: dnsutils
-    state: present
-  when: letsencrypt_cert is defined and letsencrypt_cert.challenge|default() == 'dns'
-
-- name: install Let's Encrypt Certbot client
-  apt:
-    pkg: certbot
-    state: present
-    default_release: "{{ 'jessie-backports' if ansible_distribution_release == 'jessie' else omit }}"
-
-- name: install certbot plugin 'apache' on webservers
-  apt:
-    pkg: python-certbot-apache
-    state: present
-  when: ansible_fqdn in groups[letsencrypt_webserver_groupname]|default([])
+- name: install packages
+  include_tasks: "{{ ansible_os_family }}.yml"
 
 - block:
     - name: install certbot DNS challenge helper script

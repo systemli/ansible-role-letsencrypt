@@ -1,0 +1,18 @@
+---
+
+- name: install nsupdate which is used by the certbot auth-hook
+  yum:
+    name: bind-utils
+    state: present
+  when: letsencrypt_cert is defined and letsencrypt_cert.challenge|default() == 'dns'
+
+- name: install Let's Encrypt Certbot client
+  yum:
+    name: certbot
+    state: present
+
+- name: install certbot plugin 'apache' on webservers
+  yum:
+    name: python2-certbot-apache
+    state: present
+  when: ansible_fqdn in groups[letsencrypt_webserver_groupname]|d([])
