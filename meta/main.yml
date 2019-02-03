@@ -13,9 +13,14 @@ galaxy_info:
     versions:
       - jessie
       - stretch
+  - name: EL
+    versions:
+      - 7
   notifications:
     webhooks: https://galaxy.ansible.com/api/v1/notifications/
 
 dependencies:
   - role: jnv.debian-backports
-    when: ansible_distribution_major_version|int <= 8
+    when: >
+      ansible_os_family == 'Debian'
+      and ansible_distribution_major_version|int <= 8
