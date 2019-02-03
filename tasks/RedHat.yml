@@ -1,0 +1,12 @@
+---
+
+- name: install Let's Encrypt Certbot client
+  yum:
+    name: certbot
+    state: present
+
+- name: install certbot plugin 'apache' on webservers
+  yum:
+    name: python2-certbot-apache
+    state: present
+  when: ansible_fqdn in groups[letsencrypt_webserver_groupname]|d([])
