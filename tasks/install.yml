@@ -1,21 +1,7 @@
 ---
-- name: install nsupdate which is used by the certbot auth-hook
-  apt:
-    pkg: dnsutils
-    state: present
-  when: letsencrypt_cert is defined and letsencrypt_cert.challenge|default() == 'dns'
 
-- name: install Let's Encrypt Certbot client
-  apt:
-    pkg: certbot
-    state: present
-    default_release: "{{ 'jessie-backports' if ansible_distribution_release == 'jessie' else omit }}"
-
-- name: install certbot plugin 'apache' on webservers
-  apt:
-    pkg: python-certbot-apache
-    state: present
-  when: ansible_fqdn in groups[letsencrypt_webserver_groupname]|default([])
+- name: install packages
+  include_tasks: "{{ ansible_os_family }}.yml"
 
 - block:
     - name: install certbot DNS challenge helper script
@@ -39,7 +25,7 @@
         owner: root
         group: root
         mode: 0400
-      when: letsencrypt_ddns_key|default()
+      when: letsencrypt_ddns_key|d()
     - name: install certbot DNS challenge nsupdate private key
       copy:
         content: "{{ letsencrypt_ddns_privkey }}"
@@ -47,8 +33,8 @@
         owner: root
         group: root
         mode: 0400
-      when: letsencrypt_ddns_privkey|default()
-  when: letsencrypt_dns_challenge|default(True)
+      when: letsencrypt_ddns_privkey|d()
+  when: letsencrypt_dns_challenge|d(True)
 
 - block:
     - name: add system group 'letsencrypt'
@@ -65,15 +51,12 @@
       with_items:
         - /etc/letsencrypt/archive
         - /etc/letsencrypt/live
-  when: letsencrypt_group|default(True)
+  when: letsencrypt_group|d(True)
 
 - name: check if letsencrypt_account_email is set
   fail:
-    msg: "Error: either set letsencrypt_account_email or add '--register-unsafely-without-email' to letsencrypt_opts_extra"
-  when:
-    - not '--register-unsafely-without-email' in letsencrypt_opts_extra|default()
-    - not __testing|default()
-    - not letsencrypt_account_email|default()
+    msg: "Error: letsencrypt_account_email required for account creation"
+  when: not letsencrypt_account_email|d() and not __testing|default()
 
 - name: check if a Let's Encrypt account exists
   stat:
@@ -82,17 +65,12 @@
 
 - name: prepare optional test cert option
   set_fact:
-    letsencrypt_opt_email: "{{ letsencrypt_account_email|default()|ternary('--email ' + letsencrypt_account_email,'') }}"
-
-- name: prepare optional test cert option
-  set_fact:
-    letsencrypt_opt_test_cert: "{{ letsencrypt_test|default()|ternary('--test-cert','') }}"
+    letsencrypt_opt_test_cert: "{{ letsencrypt_test|d()|ternary('--test-cert','') }}"
 
 - name: create Let's Encrypt account
   command: >
     certbot register
-    {{ letsencrypt_opt_test_cert }}
-    {{ letsencrypt_opt_email }}
-    {{ letsencrypt_opts_extra|default() }}
+    {{ letsencrypt_opt_test_cert|d() }}
+    --email "{{ letsencrypt_account_email|d() }}"
     --non-interactive --agree-tos --quiet
   when: not letsencrypt_reg_accounts_dir.stat.exists and not __testing|default()
