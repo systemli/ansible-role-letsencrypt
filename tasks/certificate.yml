@@ -24,12 +24,12 @@
   set_fact:
     letsencrypt_opt_test_cert: "{{ letsencrypt_test|default()|ternary('--test-cert','') }}"
 
-- name: prepare renew-hook options #1
+- name: "prepare renew-hook options #1"
   set_fact:
     letsencrypt_opt_renew_hook: "--renew-hook '{{ letsencrypt_cert.renew_hook }}'"
   when: letsencrypt_cert.renew_hook|default()
 
-- name: prepare renew-hook options #2
+- name: "prepare renew-hook options #2"
   set_fact:
     letsencrypt_opt_renew_hook: "--renew-hook 'systemctl restart {{ letsencrypt_cert.services|join(' ') }}'"
   when: not letsencrypt_cert.renew_hook|default() and letsencrypt_cert.services|default()
