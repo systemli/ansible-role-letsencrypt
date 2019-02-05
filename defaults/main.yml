@@ -16,10 +16,10 @@ letsencrypt_webserver_groupname: web
 letsencrypt_dns_challenge: yes
 
 # Settings for the dynamic DNS zone updates
-#letsencrypt_ddns_server: ""
-#letsencrypt_ddns_zone: ""
-#letsencrypt_ddns_key: ""
-#letsencrypt_ddns_privkey: ""
+# letsencrypt_ddns_server: ""
+# letsencrypt_ddns_zone: ""
+# letsencrypt_ddns_key: ""
+# letsencrypt_ddns_privkey: ""
 
 # Create system group 'letsencrypt' for access to certificates
 letsencrypt_group: yes

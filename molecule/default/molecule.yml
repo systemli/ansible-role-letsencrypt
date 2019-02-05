@@ -1,0 +1,39 @@
+---
+scenario:
+  name: default
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+platforms:
+  - name: stretch64
+    box: debian/stretch64
+    memory: 512
+    cpus: 1
+  - name: jessie64
+    box: debian/jessie64
+    memory: 512
+    cpus: 1
+provisioner:
+  name: ansible
+  become: true
+  lint:
+    name: ansible-lint
+    enabled: False
+  playbooks:
+    converge: playbook.yml
+lint:
+  name: yamllint
+  enabled: True
+verifier:
+  name: testinfra
+  directory: ../tests/
+  env:
+    # get rid of the DeprecationWarning messages of third-party libs,
+    # see https://docs.pytest.org/en/latest/warnings.html#deprecationwarning-and-pendingdeprecationwarning
+    PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"
+  lint:
+    name: flake8
+  options:
+    # show which tests where executed in test output
+    v: 1
