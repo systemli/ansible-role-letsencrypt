@@ -1,5 +1,10 @@
 ---
 
+- name: install epel-release to get access to certbot
+  yum:
+    name: epel-release
+    state: present
+
 - name: install nsupdate which is used by the certbot auth-hook
   yum:
     name: bind-utils

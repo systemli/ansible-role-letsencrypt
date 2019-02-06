@@ -6,6 +6,7 @@ env:
   matrix:
     - MOLECULE_DISTRO: debian9
     - MOLECULE_DISTRO: debian8
+    - MOLECULE_DISTRO: centos7
 
 install:
   # Install test dependencies.
