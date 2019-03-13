@@ -24,15 +24,20 @@
   set_fact:
     letsencrypt_opt_test_cert: "{{ letsencrypt_test|default()|ternary('--test-cert','') }}"
 
-- name: "prepare renew-hook options #1"
+- name: "prepare post-hook options #1"
+  set_fact:
+    letsencrypt_opt_post_hook: "--post-hook '{{ letsencrypt_cert.post_hook }}'"
+  when: letsencrypt_cert.post_hook|default()
+
+- name: "prepare post-hook options #2"
+  set_fact:
+    letsencrypt_opt_post_hook: "--post-hook 'systemctl restart {{ letsencrypt_cert.services|join(' ') }}'"
+  when: not letsencrypt_cert.post_hook|default() and letsencrypt_cert.services|default()
+
+- name: "prepare renew-hook options"
   set_fact:
     letsencrypt_opt_renew_hook: "--renew-hook '{{ letsencrypt_cert.renew_hook }}'"
   when: letsencrypt_cert.renew_hook|default()
-
-- name: "prepare renew-hook options #2"
-  set_fact:
-    letsencrypt_opt_renew_hook: "--renew-hook 'systemctl restart {{ letsencrypt_cert.services|join(' ') }}'"
-  when: not letsencrypt_cert.renew_hook|default() and letsencrypt_cert.services|default()
 
 - name: register Let's Encrypt certificate with HTTP challenge
   command: >
@@ -44,6 +49,7 @@
     --domains {{ letsencrypt_cert.domains|join(',') }}
     --keep-until-expiring --expand --allow-subset-of-names
     --non-interactive --agree-tos
+    {{ letsencrypt_opt_post_hook|default() }}
     {{ letsencrypt_opt_renew_hook|default() }}
   when: letsencrypt_cert.challenge|default() == 'http' and letsencrypt_cert.domains|default()
   register: letsencrypt_reg_certbot_http
@@ -61,6 +67,7 @@
     --manual-public-ip-logging-ok
     --manual-auth-hook 'certbot-dns-hook.sh auth'
     --manual-cleanup-hook 'certbot-dns-hook.sh cleanup'
+    {{ letsencrypt_opt_post_hook|default() }}
     {{ letsencrypt_opt_renew_hook|default() }}
   when: letsencrypt_cert.challenge|default() == 'dns' and letsencrypt_cert.domains|default()
   register: letsencrypt_reg_certbot_dns
