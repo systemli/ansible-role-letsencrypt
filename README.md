@@ -43,8 +43,9 @@ It does the following:
    at renewal):  
    ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"name":"sub2","domains":["sub2.example.org","sub2.another.example.org"],"challenge":"dns","services":["dovecot","exim4"],"users":["Debian-exim"]}}'```
  * Creation of a certificate via HTTP challenge and with `standalone`
-   authenticator (running a custom post-hook script at renewal):
-   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"name":"sub3","domains":["sub3.example.org"],"challenge":"http","http_auth":"standalone","post_hook":"/usr/local/bin/cert-post-hook.sh"}}'```
+   authenticator (re-using same private key at renewal and running a
+   custom post-hook script at renewal):
+   ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"name":"sub3","domains":["sub3.example.org"],"challenge":"http","http_auth":"standalone","reuse_key":True,"post_hook":"/usr/local/bin/cert-post-hook.sh"}}'```
 
 ## Expected structure of variable `letsencrypt_cert`
 
@@ -88,6 +89,7 @@ letsencrypt_cert:
     - sub3.example.org
   challenge: http
   http_auth: standalone
+  reuse_key: True
   post_hook: "/usr/local/bin/cert-post-hook.sh"
 ```
 
@@ -99,6 +101,8 @@ The dictionary supports the following keys:
   * for challenge 'http': `http_auth`: 'webroot' or 'apache' [optional, default 'webroot']
     * for http_auth 'webroot': `webroot_path` [optional, default '/var/www']
 * `services`: list of services to be restarted in the post-hook [optional]
+* `reuse_key`: Reuse same private key at certificate renewal. 'True' or 'False'
+   (default 'False')
 * `post_hook`: Custom post-hook to be executed after attempt to obtain/renew
   a certificate [optional]
 * `renew_hook`: Custom renew-hook to be executed once for each renewed
@@ -236,6 +240,9 @@ letsencrypt_dns_challenge: yes
 # Create system group 'letsencrypt' for access to certificates
 letsencrypt_group: yes
 
+# Reuse private key at certificate renewal?
+letsencrypt_reuse_key: False
+
 # Set global extra commandline options for certbot
 letsencrypt_opts_extra: ""
 ```
@@ -265,4 +272,4 @@ This Ansible role is licensed under the GNU GPLv3.
 
 ## Author
 
-Copyright 2017-2018 systemli.org (https://www.systemli.org/)
+Copyright 2017-2019 systemli.org (https://www.systemli.org/)

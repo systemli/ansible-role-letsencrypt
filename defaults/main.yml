@@ -24,5 +24,8 @@ letsencrypt_dns_challenge: yes
 # Create system group 'letsencrypt' for access to certificates
 letsencrypt_group: yes
 
+# Reuse private key at certificate renewal?
+letsencrypt_reuse_key: False
+
 # Set global extra commandline options for certbot
 letsencrypt_opts_extra: ""
