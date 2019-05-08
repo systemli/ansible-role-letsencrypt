@@ -10,10 +10,6 @@ platforms:
     box: debian/stretch64
     memory: 512
     cpus: 1
-  - name: jessie64
-    box: debian/jessie64
-    memory: 512
-    cpus: 1
   - name: centos7
     box: centos/7
     memory: 512

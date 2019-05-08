@@ -10,7 +10,6 @@
   apt:
     pkg: certbot
     state: present
-    default_release: "{{ 'jessie-backports' if ansible_distribution_release == 'jessie' else omit }}"
 
 - name: install certbot plugin 'apache' on webservers
   apt:
