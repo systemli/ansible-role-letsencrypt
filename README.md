@@ -243,6 +243,9 @@ letsencrypt_group: yes
 # Reuse private key at certificate renewal?
 letsencrypt_reuse_key: False
 
+# Allow subset of names?
+letsencrypt_subset_names: True
+
 # Set global extra commandline options for certbot
 letsencrypt_opts_extra: ""
 ```

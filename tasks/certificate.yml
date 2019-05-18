@@ -28,6 +28,10 @@
   set_fact:
     letsencrypt_opt_reuse_key: "{{ letsencrypt_cert.reuse_key|default(letsencrypt_reuse_key)|ternary('--reuse-key','') }}"
 
+- name: prepare allow-subset-of-names option
+  set_fact:
+    letsencrypt_opt_allow_subset_of_names: "{{ letsencrypt_subset_names|default()|ternary('--allow-subset-of-names','') }}"
+
 - name: "prepare post-hook options #1"
   set_fact:
     letsencrypt_opt_post_hook: "--post-hook '{{ letsencrypt_cert.post_hook }}'"
@@ -52,7 +56,8 @@
     {{ letsencrypt_opt_reuse_key|default() }}
     {{ letsencrypt_cert.opts_extra|default(letsencrypt_opts_extra|default()) }}
     --domains {{ letsencrypt_cert.domains|join(',') }}
-    --keep-until-expiring --expand --allow-subset-of-names
+    --keep-until-expiring --expand
+    {{ letsencrypt_opt_allow_subset_of_names|default() }}
     --non-interactive --agree-tos
     {{ letsencrypt_opt_post_hook|default() }}
     {{ letsencrypt_opt_renew_hook|default() }}
