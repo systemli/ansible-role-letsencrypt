@@ -30,7 +30,7 @@
 
 - name: prepare allow-subset-of-names option
   set_fact:
-    letsencrypt_opt_allow_subset_of_names: "{{ letsencrypt_subset_names|default()|ternary('--allow-subset-of-names','') }}"
+    letsencrypt_opt_allow_subset_of_names: "{{ letsencrypt_cert.subset_names|default(letsencrypt_subset_names)|ternary('--allow-subset-of-names','') }}"
 
 - name: "prepare post-hook options #1"
   set_fact:
