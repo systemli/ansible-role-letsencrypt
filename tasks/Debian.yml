@@ -13,6 +13,6 @@
 
 - name: install certbot plugin 'apache' on webservers
   apt:
-    pkg: python-certbot-apache
+    pkg: python3-certbot-apache
     state: present
   when: ansible_fqdn in groups[letsencrypt_webserver_groupname]|d([])
