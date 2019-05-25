@@ -57,8 +57,9 @@
     msg: "Error: either set letsencrypt_account_email or add '--register-unsafely-without-email' to letsencrypt_opts_extra"
   when:
     - not '--register-unsafely-without-email' in letsencrypt_opts_extra|default()
-    - not __testing|default()
     - not letsencrypt_account_email|default()
+  tags:
+    - molecule-notest
 
 - name: check if a Let's Encrypt account exists
   stat:
@@ -80,4 +81,6 @@
     {{ letsencrypt_opt_email }}
     {{ letsencrypt_opts_extra|default() }}
     --non-interactive --agree-tos --quiet
-  when: not letsencrypt_reg_accounts_dir.stat.exists and not __testing|default()
+  when: not letsencrypt_reg_accounts_dir.stat.exists
+  tags:
+    - molecule-notest

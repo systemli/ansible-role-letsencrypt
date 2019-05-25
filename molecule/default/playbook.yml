@@ -4,5 +4,3 @@
   become: True
   roles:
     - role: ansible-role-letsencrypt
-  vars:
-    __testing: True
