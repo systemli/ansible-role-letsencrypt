@@ -23,7 +23,9 @@ provisioner:
     enabled: false
   playbooks:
     converge: ../default/playbook.yml
+    verify: ../default/verify.yml
 verifier:
-  name: testinfra
+  name: goss
+  directory: ../default/tests/
   lint:
-    name: flake8
+    name: yamllint
