@@ -4,6 +4,7 @@ cache: pip
 
 env:
   matrix:
+    - MOLECULE_DISTRO: debian10
     - MOLECULE_DISTRO: debian9
     - MOLECULE_DISTRO: centos7
 

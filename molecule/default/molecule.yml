@@ -4,8 +4,8 @@ driver:
   provider:
     name: virtualbox
 platforms:
-  - name: stretch64
-    box: debian/stretch64
+  - name: buster64
+    box: debian/buster64
   - name: centos7
     box: centos/7
 lint: |
