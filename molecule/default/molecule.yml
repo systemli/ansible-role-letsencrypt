@@ -1,6 +1,4 @@
 ---
-scenario:
-  name: default
 driver:
   name: vagrant
   provider:
@@ -8,24 +6,14 @@ driver:
 platforms:
   - name: stretch64
     box: debian/stretch64
-    memory: 512
-    cpus: 1
   - name: centos7
     box: centos/7
-    memory: 512
-    cpus: 1
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
 provisioner:
   name: ansible
   become: true
-  lint:
-    name: ansible-lint
-    enabled: False
-  playbooks:
-    converge: playbook.yml
-lint:
-  name: yamllint
-  enabled: True
 verifier:
   name: goss
-  lint:
-    name: yamllint
