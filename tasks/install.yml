@@ -33,7 +33,7 @@
         group: root
         mode: 0400
       when: letsencrypt_ddns_privkey|default()
-  when: letsencrypt_dns_challenge|default(True)
+  when: letsencrypt_dns_challenge
 
 - block:
     - name: add system group 'letsencrypt'
@@ -50,14 +50,14 @@
       with_items:
         - /etc/letsencrypt/archive
         - /etc/letsencrypt/live
-  when: letsencrypt_group|default(True)
+  when: letsencrypt_group
 
 - name: check if letsencrypt_account_email is set
   fail:
     msg: "Error: either set letsencrypt_account_email or add '--register-unsafely-without-email' to letsencrypt_opts_extra"
   when:
-    - not '--register-unsafely-without-email' in letsencrypt_opts_extra|default()
-    - not letsencrypt_account_email|default()
+    - not '--register-unsafely-without-email' in letsencrypt_opts_extra
+    - not letsencrypt_account_email
   tags:
     - molecule-notest
 
@@ -68,7 +68,7 @@
 
 - name: prepare optional test cert option
   set_fact:
-    letsencrypt_opt_email: "{{ letsencrypt_account_email|default()|ternary('--email ' + letsencrypt_account_email,'') }}"
+    letsencrypt_opt_email: "{{ letsencrypt_account_email|ternary('--email ' + letsencrypt_account_email,'') }}"
 
 - name: prepare optional test cert option
   set_fact:
@@ -79,7 +79,7 @@
     certbot register
     {{ letsencrypt_opt_test_cert }}
     {{ letsencrypt_opt_email }}
-    {{ letsencrypt_opts_extra|default() }}
+    {{ letsencrypt_opts_extra }}
     --non-interactive --agree-tos --quiet
   when: not letsencrypt_reg_accounts_dir.stat.exists
   tags:
