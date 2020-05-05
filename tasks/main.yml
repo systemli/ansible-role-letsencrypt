@@ -1,7 +1,7 @@
 ---
 
-- include: install.yml
+- import_tasks: install.yml
   when: letsencrypt_setup
 
-- include: certificate.yml
+- import_tasks: certificate.yml
   when: letsencrypt_cert|d()
