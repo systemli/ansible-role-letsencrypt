@@ -1,5 +1,8 @@
 ---
 
+# Perform setup step; set false to disable
+letsencrypt_setup: True
+
 # Set the email address associated with the Let's Encrypt account
 letsencrypt_account_email: ""
 

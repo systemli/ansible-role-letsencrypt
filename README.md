@@ -18,11 +18,12 @@ Features:
 * Permission control to certificates using a dedicated system group
 
 It does the following:
+* When letsencrypt_setup is True (the default) this role will:
+  * Install certbot
+  * Register an account at Let's Encrypt
+  * Install required files/keys for the DNS challenge
+  * Create the system group 'letsencrypt'
 
-* When invoked with unset/empty variable 'letsencrypt_cert':
-  * Installs certbot, registers an account at Let's Encrypt
-  * Installs required files/keys for the DNS challenge
-  * Creates the system group 'letsencrypt'
 * When invoked with filled variable 'letsencrypt_cert':
   * Requests a SSL certificate via the Let's Encrypt ACME API, either
     using the HTTP challenge or using the DNS challenge
@@ -36,11 +37,11 @@ It does the following:
  * Installation of certbot
    ```ansible-playbook site.yml -l localhost -t letsencrypt```
  * Creation of a certificate via HTTP challenge and with `webroot`
-   authenticator (restarting service 'apache2' at renewal):  
+   authenticator (restarting service 'apache2' at renewal):
    ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"name":"sub.example.org","domains":["sub.example.org"],"challenge":"http","http_auth":"webroot","webroot_path":"/var/www/sub.example.org","services":["apache2"]}}'```
  * Creation of a certificate via DNS challenge (granting read access to
    certs to user 'Debian-exim', restarting services 'exim4' and 'dovecot`
-   at renewal):  
+   at renewal):
    ```ansible-playbook site.yml -l localhost -t letsencrypt -e '{"letsencrypt_cert":{"name":"sub2","domains":["sub2.example.org","sub2.another.example.org"],"challenge":"dns","services":["dovecot","exim4"],"users":["Debian-exim"]}}'```
  * Creation of a certificate via HTTP challenge and with `standalone`
    authenticator (re-using same private key at renewal and running a
@@ -225,7 +226,7 @@ letsencrypt_http_auth: webroot
 # Default webroot path for the authenticator 'webroot'
 letsencrypt_webroot_path: /var/www
 
-# Default group name of the webservers in the inventory file 
+# Default group name of the webservers in the inventory file
 letsencrypt_webserver_groupname: web
 
 # Install the DNS challenge helper script and DNS update key
@@ -264,7 +265,7 @@ For developing and testing the role we use Travis CI, Molecule and Vagrant. On t
 Run local tests with:
 
 ```
-molecule test 
+molecule test
 ```
 
 Requires Molecule, Vagrant and `python-vagrant` to be installed.For developing and testing the role we use Travis CI, Molecule and Vagrant. On the local environment you can easily test the role with
