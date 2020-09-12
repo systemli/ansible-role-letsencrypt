@@ -146,6 +146,10 @@ This role installs a helper script for the DNS challenge to
 token to the TXT record at `sub.example.org._le.example.org` during the DNS
 challenge and remove it afterwards.
 
+### Wildcard support with the DNS challenge
+
+Obtaining wildcard certificates should work out of the box via DNS challenge.
+
 ### Configuring bind9 for the DNS challenge
 *(Another option would be to use the [acme-dns server](https://github.com/joohoi/acme-dns) for this)*
 

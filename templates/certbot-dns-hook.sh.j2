@@ -18,6 +18,9 @@ if [ -z ${CERTBOT_VALIDATION} ]; then
     exit 1
 fi
 
+# Wildcard support: remove `^*.' from $CERTBOT_DOMAIN
+CERTBOT_DOMAIN="${CERTBOT_DOMAIN#\*\.}"
+
 # Key for the dynamic DNS updates
 DDNS_KEY='/etc/letsencrypt/keys/ddns_update.key'
 

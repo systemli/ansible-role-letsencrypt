@@ -72,7 +72,8 @@
     {{ letsencrypt_opt_test_cert|default() }}
     --domains {{ letsencrypt_cert.domains|join(',') }}
     --preferred-challenge=dns
-    --keep-until-expiring --expand --allow-subset-of-names
+    --keep-until-expiring --expand
+    {{ letsencrypt_opt_allow_subset_of_names|default() }}
     --non-interactive --agree-tos
     --manual-public-ip-logging-ok
     --manual-auth-hook 'certbot-dns-hook.sh auth'
