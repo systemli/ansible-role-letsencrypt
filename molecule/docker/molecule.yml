@@ -1,6 +1,4 @@
 ---
-dependency:
-  name: galaxy
 driver:
   name: docker
 platforms:
@@ -11,15 +9,11 @@ platforms:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     privileged: true
     pre_build_image: true
-lint: |
-  set -e
-  yamllint .
-  ansible-lint
 provisioner:
   name: ansible
   playbooks:
     converge: ../default/converge.yml
-    verify: ../default/verify.yml
-verifier:
-  name: goss
-  directory: ../default/tests/
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
