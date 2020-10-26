@@ -1,5 +1,0 @@
----
-
-package:
-  certbot:
-    installed: true

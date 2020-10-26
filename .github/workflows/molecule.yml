@@ -1,0 +1,50 @@
+---
+name: Continuous Integration
+on:
+  push:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    # first of each month
+    - cron: '0 0 1 * *'
+
+jobs:
+
+  test:
+    name: Molecule
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        distro:
+          - debian10
+          - debian9
+          - centos7
+
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies.
+        run: pip3 install ansible-lint molecule[docker] yamllint
+
+      - name: Run Molecule tests.
+        run: molecule test -s docker
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: ${{ matrix.distro }}
+
+  release:
+    name: Ansible Galaxy
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish to Ansible Galaxy
+        uses: robertdebock/galaxy-action@1.0.3
+        with:
+          galaxy_api_key: ${{ secrets.galaxy_api_key }}

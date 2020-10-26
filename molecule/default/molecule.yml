@@ -15,5 +15,3 @@ lint: |
 provisioner:
   name: ansible
   become: true
-verifier:
-  name: goss
