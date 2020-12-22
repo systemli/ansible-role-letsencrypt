@@ -95,6 +95,17 @@ letsencrypt_cert:
   post_hook: "/usr/local/bin/cert-post-hook.sh"
 ```
 
+```
+letsencrypt_cert:
+  name: sub3
+  domains:
+    - sub3.example.org
+  challenge: http
+  http_auth: standalone
+  reuse_key: True
+  deploy_hook: "/usr/local/bin/cert-post-hook.sh"
+```
+
 The dictionary supports the following keys:
 
 * `name`: name of the certificate [optional]
@@ -107,6 +118,8 @@ The dictionary supports the following keys:
    (default 'False')
 * `post_hook`: Custom post-hook to be executed after attempt to obtain/renew
   a certificate [optional]
+* `deploy_hook`: Custom deploy-hook to be executed after a successful attempt
+  to obtain/renew  a certificate [optional]  
 * `renew_hook`: Custom renew-hook to be executed once for each renewed
   certificate after certificate renewal [optional]
 * `users`: list of users to be added to system group 'letsencrypt' [optional]
