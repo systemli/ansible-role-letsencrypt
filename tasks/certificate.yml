@@ -40,7 +40,25 @@
 - name: "prepare post-hook options #2"
   set_fact:
     letsencrypt_opt_post_hook: "--post-hook 'systemctl restart {{ letsencrypt_cert.services|join(' ') }}'"
-  when: not letsencrypt_cert.post_hook|default() and letsencrypt_cert.services|default()
+  when:
+    - not letsencrypt_cert.post_hook|default()
+    - letsencrypt_cert.services|default()
+    - letsencrypt_cert_use_post_hook_for_service_restart|default(True)
+    - not letsencrypt_cert_use_deploy_hook_for_service_restart|default(False)
+
+- name: "prepare deploy-hook options #1"
+  set_fact:
+    letsencrypt_opt_deploy_hook: "--deploy-hook '{{ letsencrypt_cert.deploy_hook }}'"
+  when: letsencrypt_cert.deploy_hook|default()
+
+- name: "prepare deploy-hook options #2"
+  set_fact:
+    letsencrypt_opt_deploy_hook: "--deploy-hook 'systemctl restart {{ letsencrypt_cert.services|join(' ') }}'"
+  when:
+    - not letsencrypt_cert.deploy_hook|default()
+    - letsencrypt_cert.services|default()
+    - not letsencrypt_cert_use_post_hook_for_service_restart|default(True)
+    - letsencrypt_cert_use_deploy_hook_for_service_restart|default(False)
 
 - name: "prepare renew-hook options"
   set_fact:
@@ -60,6 +78,7 @@
     {{ letsencrypt_opt_allow_subset_of_names|default() }}
     --non-interactive --agree-tos
     {{ letsencrypt_opt_post_hook|default() }}
+    {{ letsencrypt_opt_deploy_hook|default() }}
     {{ letsencrypt_opt_renew_hook|default() }}
   when: letsencrypt_cert.challenge|default() == 'http' and letsencrypt_cert.domains|default()
   register: letsencrypt_reg_certbot_http
@@ -79,6 +98,7 @@
     --manual-auth-hook 'certbot-dns-hook.sh auth'
     --manual-cleanup-hook 'certbot-dns-hook.sh cleanup'
     {{ letsencrypt_opt_post_hook|default() }}
+    {{ letsencrypt_opt_deploy_hook|default() }}
     {{ letsencrypt_opt_renew_hook|default() }}
   when: letsencrypt_cert.challenge|default() == 'dns' and letsencrypt_cert.domains|default()
   register: letsencrypt_reg_certbot_dns
