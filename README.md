@@ -1,6 +1,6 @@
 # Ansible role to obtain Let's Encrypt SSL certificates
 
-![Continuous Integration](https://github.com/systemli/ansible-role-letsencrypt/workflows/Continuous%20Integration/badge.svg)
+![Integration](https://github.com/systemli/ansible-role-letsencrypt/workflows/Integration/badge.svg?branch=master)
 [![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-letsencrypt-blue.svg)](https://galaxy.ansible.com/systemli/letsencrypt/)
 
 This role is meant to request SSL certificates from Let's Encrypt,
