@@ -1,6 +1,7 @@
 ---
 name: Integration
 on:
+  pull_request:
   push:
   schedule:
     # * is a special character in YAML so you have to quote this string
@@ -29,7 +30,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install test dependencies.
-        run: pip3 install ansible-lint molecule[docker] yamllint
+        run: pip3 install ansible-lint molecule[docker] molecule-goss yamllint
 
       - name: Run Molecule tests.
         run: molecule test -s docker

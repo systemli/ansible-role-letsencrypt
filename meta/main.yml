@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  role_name: letsencrypt
   author: systemli
   description: Role to obtain Let's Encrypt SSL certificates
   company: systemli.org
