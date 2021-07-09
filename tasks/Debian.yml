@@ -4,15 +4,18 @@
   apt:
     pkg: dnsutils
     state: present
+    cache_valid_time: 600
   when: letsencrypt_cert is defined and letsencrypt_cert.challenge|default() == 'dns'
 
 - name: install Let's Encrypt Certbot client
   apt:
     pkg: certbot
     state: present
+    cache_valid_time: 600
 
 - name: install certbot plugin 'apache' on webservers
   apt:
     pkg: python3-certbot-apache
     state: present
+    cache_valid_time: 600
   when: ansible_fqdn in groups[letsencrypt_webserver_groupname]|d([])
