@@ -271,22 +271,15 @@ letsencrypt_opts_extra: ""
 
 ## Testing
 
-For testing purposes, variable 'letsencrypt_test' can be set. If set to
+For testing purposes, variable `letsencrypt_test` can be set. If set to
 True, the role will use Let's Encrypt test servers for account creation
 and obtaining the certificate.
 
-Tests
------
-
-For developing and testing the role we use Travis CI, Molecule and Vagrant. On the local environment you can easily test the role with
-
-Run local tests with:
+For developing and testing the role we use Molecule and Vagrant/Github Actions. On the local environment you can easily test the role with
 
 ```
 molecule test
 ```
-
-Requires Molecule, Vagrant and `python-vagrant` to be installed.For developing and testing the role we use Travis CI, Molecule and Vagrant. On the local environment you can easily test the role with
 
 ## License
 
