@@ -16,8 +16,8 @@ jobs:
     strategy:
       matrix:
         distro:
+          - debian11
           - debian10
-          - debian9
           - centos7
 
     steps:
