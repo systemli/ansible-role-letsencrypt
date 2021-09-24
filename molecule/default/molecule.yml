@@ -4,9 +4,11 @@ driver:
   provider:
     name: virtualbox
 platforms:
-  - name: buster64
+  - name: letsencrypt-bullseye64
+    box: debian/bullseye64
+  - name: letsencrypt-buster64
     box: debian/buster64
-  - name: centos7
+  - name: letsencrypt-centos7
     box: centos/7
 lint: |
   set -e
