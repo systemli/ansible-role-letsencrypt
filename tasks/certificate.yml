@@ -116,3 +116,20 @@
     append: yes
   with_items: "{{ letsencrypt_cert.users|default([]) }}"
   when: letsencrypt_cert.users|default() and item in letsencrypt_reg_system_users.stdout_lines|default([])
+
+- block:
+    - name: get dest of current private key
+      file:
+        path: /etc/letsencrypt/live/{{ letsencrypt_cert.name }}/privkey.pem
+        state: link
+      register: privkey
+      check_mode: true
+      changed_when: false
+
+    - name: ensure letsencrypt group can read private key
+      file:
+        path: "{{ privkey.dest }}"
+        owner: root
+        group: letsencrypt
+        mode: 0640
+  when: letsencrypt_group
