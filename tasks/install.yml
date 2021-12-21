@@ -1,5 +1,4 @@
 ---
-
 - name: install packages
   include_tasks: "{{ ansible_os_family }}.yml"
 
@@ -35,11 +34,6 @@
         mode: 0400
       when: letsencrypt_ddns_privkey|default()
   when: letsencrypt_dns_challenge
-
-- name: create webroot directory
-  file:
-    path: "{{ letsencrypt_webroot_path }}"
-    state: directory
 
 - block:
     - name: add system group 'letsencrypt'
