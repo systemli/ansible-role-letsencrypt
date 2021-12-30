@@ -3,10 +3,6 @@ name: Auto Merge
 on:
   pull_request_target:
 
-permissions:
-  pull-requests: write
-  contents: write
-
 jobs:
   auto-merge:
     name: Merge Automatically
