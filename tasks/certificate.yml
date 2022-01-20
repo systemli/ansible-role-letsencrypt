@@ -65,6 +65,12 @@
     letsencrypt_opt_renew_hook: "--renew-hook '{{ letsencrypt_cert.renew_hook }}'"
   when: letsencrypt_cert.renew_hook|default()
 
+- name: create webroot directory
+  file:
+    path: "{{ letsencrypt_cert.webroot_path|default(letsencrypt_webroot_path) }}"
+    state: directory
+  when: letsencrypt_cert.http_auth|default(letsencrypt_http_auth) == 'webroot'
+
 - name: register Let's Encrypt certificate with HTTP challenge
   command: >
     certbot certonly
