@@ -69,6 +69,9 @@
   file:
     path: "{{ letsencrypt_cert.webroot_path|default(letsencrypt_webroot_path) }}"
     state: directory
+    owner: root
+    group: root
+    mode: 0755
   when: letsencrypt_cert.http_auth|default(letsencrypt_http_auth) == 'webroot'
 
 - name: register Let's Encrypt certificate with HTTP challenge
