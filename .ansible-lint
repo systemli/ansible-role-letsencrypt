@@ -1,0 +1,5 @@
+---
+# .ansible-lint
+
+skip_list:
+  - fqcn-builtins
