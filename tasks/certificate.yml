@@ -5,6 +5,11 @@
     letsencrypt_opt_http_auth: "--apache"
   when: letsencrypt_cert.http_auth|default(letsencrypt_http_auth) == 'apache'
 
+- name: prepare authenticator options for nginx
+  set_fact:
+    letsencrypt_opt_http_auth: "--nginx"
+  when: letsencrypt_cert.http_auth|default(letsencrypt_http_auth) == 'nginx'
+
 - name: prepare authenticator options for standalone
   set_fact:
     letsencrypt_opt_http_auth: "--standalone"
