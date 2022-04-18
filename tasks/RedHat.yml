@@ -21,3 +21,9 @@
     name: python2-certbot-apache
     state: present
   when: ansible_fqdn in groups[letsencrypt_webserver_groupname]|d([])
+
+- name: install certbot plugin 'nginx' on webservers
+  yum:
+    name: python2-certbot-nginx
+    state: present
+  when: ansible_fqdn in groups[letsencrypt_webserver_groupname]|d([])
