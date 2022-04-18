@@ -140,6 +140,8 @@ Requirements:
   to the system
 * For http_auth 'apache', Apache2 has to be installed (and configured)
   on the system
+* For http_auth 'nginx', NGINX has to be installed (and configured)
+  on the system
 
 ## The DNS challenge
 
