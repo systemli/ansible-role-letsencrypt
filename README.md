@@ -119,7 +119,7 @@ The dictionary supports the following keys:
 * `post_hook`: Custom post-hook to be executed after attempt to obtain/renew
   a certificate [optional]
 * `deploy_hook`: Custom deploy-hook to be executed after a successful attempt
-  to obtain/renew  a certificate [optional]  
+  to obtain/renew  a certificate [optional]
 * `renew_hook`: Custom renew-hook to be executed once for each renewed
   certificate after certificate renewal [optional]
 * `users`: list of users to be added to system group 'letsencrypt' [optional]
@@ -245,9 +245,6 @@ letsencrypt_http_auth: webroot
 
 # Default webroot path for the authenticator 'webroot'
 letsencrypt_webroot_path: /var/www
-
-# Default group name of the webservers in the inventory file
-letsencrypt_webserver_groupname: web
 
 # Install the DNS challenge helper script and DNS update key
 letsencrypt_dns_challenge: yes
