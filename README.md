@@ -9,7 +9,7 @@ using the HTTP or the DNS challenge for their ACME API.
 Features:
 * Installs and configures certbot and the DNS challenge helper script
 * Supports both the HTTP and the DNS challenge
-  * For HTTP challenge, the authenticator plugins `apache`, `standalone`
+  * For HTTP challenge, the authenticator plugins `apache`, `nginx`, `standalone`
     and `webroot` are supported
 * The DNS challenge uses a dedicated zone for AMCE challenge tokens
   only, lowering the security risks of dynamic updates. The concept
@@ -111,7 +111,7 @@ The dictionary supports the following keys:
 * `name`: name of the certificate [optional]
 * `domains`: list of domains for the certificate [required]
 * `challenge`: 'http' or 'dns' [required]
-  * for challenge 'http': `http_auth`: 'webroot' or 'apache' [optional, default 'webroot']
+  * for challenge 'http': `http_auth`: 'webroot', 'apache' or 'nginx' [optional, default 'webroot']
     * for http_auth 'webroot': `webroot_path` [optional, default '/var/www']
 * `services`: list of services to be restarted in the post-hook [optional]
 * `reuse_key`: Reuse same private key at certificate renewal. 'True' or 'False'
