@@ -54,13 +54,13 @@ It does the following:
 The variable `letsencrypt_cert` is expected to be a dictionary:
 
 ```
+letsencrypt_opts_extra: "--register-unsafely-without-email"
 letsencrypt_cert:
   name: sub.example.org
   domains:
     - sub.example.org
   challenge: http
   http_auth: webroot
-  opts_extra: "--register-unsafely-without-email"
   webroot_path: /var/www/sub.example.org
   services:
     - apache2
