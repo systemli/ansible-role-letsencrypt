@@ -2,7 +2,8 @@
 - name: install packages
   include_tasks: "{{ ansible_os_family }}.yml"
 
-- block:
+- name: LetsEncrypt DNS Challenge
+  block:
     - name: install certbot DNS challenge helper script
       template:
         src: certbot-dns-hook.sh.j2
@@ -35,7 +36,8 @@
       when: letsencrypt_ddns_privkey|default()
   when: letsencrypt_dns_challenge
 
-- block:
+- name: Add group
+  block:
     - name: add system group 'letsencrypt'
       group:
         name: letsencrypt
