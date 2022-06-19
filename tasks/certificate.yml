@@ -1,5 +1,4 @@
 ---
-
 - name: prepare authenticator options for apache
   set_fact:
     letsencrypt_opt_http_auth: "--apache"
@@ -131,7 +130,8 @@
   with_items: "{{ letsencrypt_cert.users|default([]) }}"
   when: letsencrypt_cert.users|default() and item in letsencrypt_reg_system_users.stdout_lines|default([])
 
-- block:
+- name: Allow group
+  block:
     - name: get dest of current private key
       file:
         path: /etc/letsencrypt/live/{{ letsencrypt_cert.name }}/privkey.pem
