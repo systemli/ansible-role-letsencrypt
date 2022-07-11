@@ -20,5 +20,3 @@ jobs:
     uses: systemli/github-ansible-workflow/.github/workflows/ansible-integration-workflow.yaml@main
     with:
       distros: '[ "debian11", "debian10", "centos7" ]'
-    secrets:
-      galaxy-token: ${{ secrets.galaxy_api_key }}
