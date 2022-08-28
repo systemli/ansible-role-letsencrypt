@@ -18,6 +18,16 @@ Features:
   post-hook command
 * Permission control to certificates using a dedicated system group
 
+Supported distributions:
+* Debian 10 (Buster)
+* Debian 11 (Bullseye)
+* RedHat Enterprise Linux 7
+
+Tested on:
+* Debian 10 (Buster)
+* Debian 11 (Bullseye)
+* CentOS 7
+
 It does the following:
 * When letsencrypt_setup is True (the default) this role will:
   * Install certbot
