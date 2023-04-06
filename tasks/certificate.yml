@@ -134,7 +134,7 @@
   block:
     - name: get dest of current private key
       file:
-        path: /etc/letsencrypt/live/{{ letsencrypt_cert.name }}/privkey.pem
+        path: "{{ letsencrypt_directory }}/live/{{ letsencrypt_cert.name }}/privkey.pem"
         state: link
       register: privkey
       check_mode: true

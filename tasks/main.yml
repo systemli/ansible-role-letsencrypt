@@ -1,7 +1,9 @@
 ---
 
-- import_tasks: install.yml
+- name: Import install tasks
+  import_tasks: install.yml
   when: letsencrypt_setup
 
-- import_tasks: certificate.yml
+- name: Import certificate tasks
+  import_tasks: certificate.yml
   when: letsencrypt_cert|d()

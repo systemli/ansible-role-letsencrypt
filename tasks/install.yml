@@ -11,9 +11,9 @@
         owner: root
         group: root
         mode: 0755
-    - name: create directory /etc/letsencrypt/keys
+    - name: create letsencrypt directory
       file:
-        dest: /etc/letsencrypt/keys
+        dest: "{{ letsencrypt_directory }}/keys"
         state: directory
         owner: root
         group: root
@@ -21,7 +21,7 @@
     - name: install certbot DNS challenge nsupdate key
       copy:
         content: "{{ letsencrypt_ddns_key }}"
-        dest: /etc/letsencrypt/keys/ddns_update.key
+        dest: "{{ letsencrypt_directory }}/keys/ddns_update.key"
         owner: root
         group: root
         mode: 0400
@@ -29,7 +29,7 @@
     - name: install certbot DNS challenge nsupdate private key
       copy:
         content: "{{ letsencrypt_ddns_privkey }}"
-        dest: /etc/letsencrypt/keys/ddns_update.private
+        dest: "{{ letsencrypt_directory }}/keys/ddns_update.private"
         owner: root
         group: root
         mode: 0400
@@ -50,8 +50,8 @@
         group: letsencrypt
         mode: 0750
       with_items:
-        - /etc/letsencrypt/archive
-        - /etc/letsencrypt/live
+        - "{{ letsencrypt_directory }}/archive"
+        - "{{ letsencrypt_directory }}/live"
   when: letsencrypt_group
 
 - name: check if letsencrypt_account_email is set
@@ -65,7 +65,7 @@
 
 - name: check if a Let's Encrypt account exists
   stat:
-    path: /etc/letsencrypt/accounts
+    path: "{{ letsencrypt_directory }}/accounts"
   register: letsencrypt_reg_accounts_dir
 
 - name: prepare optional test cert option
