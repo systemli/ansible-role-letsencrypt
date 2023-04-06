@@ -11,7 +11,7 @@
         owner: root
         group: root
         mode: 0755
-    - name: create directory {{ letsencrypt_directory }}/keys
+    - name: create letsencrypt directory
       file:
         dest: "{{ letsencrypt_directory }}/keys"
         state: directory
