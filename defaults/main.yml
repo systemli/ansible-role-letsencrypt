@@ -32,3 +32,6 @@ letsencrypt_subset_names: True
 
 # Set global extra commandline options for certbot
 letsencrypt_opts_extra: ""
+
+# Set path for letsencrypt directory (no trailing "/" !!)
+letsencrypt_directory: /etc/letsencrypt

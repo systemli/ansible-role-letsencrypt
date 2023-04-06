@@ -22,7 +22,7 @@ fi
 CERTBOT_DOMAIN="${CERTBOT_DOMAIN#\*\.}"
 
 # Key for the dynamic DNS updates
-DDNS_KEY='/etc/letsencrypt/keys/ddns_update.key'
+DDNS_KEY='{{ letsencrypt_directory }}/keys/ddns_update.key'
 
 # Nameserver with the dynamic zone
 SERVER="{{ letsencrypt_ddns_server|d() }}"
