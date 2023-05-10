@@ -1,149 +1,149 @@
 ---
-- name: prepare authenticator options for apache
-  set_fact:
+- name: Prepare authenticator options for apache
+  ansible.builtin.set_fact:
     letsencrypt_opt_http_auth: "--apache"
   when: letsencrypt_cert.http_auth|default(letsencrypt_http_auth) == 'apache'
 
-- name: prepare authenticator options for nginx
-  set_fact:
+- name: Prepare authenticator options for nginx
+  ansible.builtin.set_fact:
     letsencrypt_opt_http_auth: "--nginx"
   when: letsencrypt_cert.http_auth|default(letsencrypt_http_auth) == 'nginx'
 
-- name: prepare authenticator options for standalone
-  set_fact:
+- name: Prepare authenticator options for standalone
+  ansible.builtin.set_fact:
     letsencrypt_opt_http_auth: "--standalone"
   when: letsencrypt_cert.http_auth|default(letsencrypt_http_auth) == 'standalone'
 
-- name: prepare authenticator options for webroot
-  set_fact:
-    letsencrypt_opt_http_auth: "--webroot --webroot-path {{ letsencrypt_cert.webroot_path|default(letsencrypt_webroot_path) }}"
-  when: letsencrypt_cert.http_auth|default(letsencrypt_http_auth) == 'webroot'
+- name: Prepare authenticator options for webroot
+  ansible.builtin.set_fact:
+    letsencrypt_opt_http_auth: "--webroot --webroot-path {{ letsencrypt_cert.webroot_path | default(letsencrypt_webroot_path) }}"
+  when: letsencrypt_cert.http_auth | default(letsencrypt_http_auth) == 'webroot'
 
-- name: prepare cert name option
-  set_fact:
+- name: Prepare cert name option
+  ansible.builtin.set_fact:
     letsencrypt_opt_cert_name: "--cert-name {{ letsencrypt_cert.name }}"
-  when: letsencrypt_cert.name|default()
+  when: letsencrypt_cert.name | default()
 
-- name: prepare optional test cert option
-  set_fact:
-    letsencrypt_opt_test_cert: "{{ letsencrypt_test|default()|ternary('--test-cert','') }}"
+- name: Prepare optional test cert option
+  ansible.builtin.set_fact:
+    letsencrypt_opt_test_cert: "{{ letsencrypt_test | default() | ternary('--test-cert', '') }}"
 
-- name: prepare reuse-key option
-  set_fact:
-    letsencrypt_opt_reuse_key: "{{ letsencrypt_cert.reuse_key|default(letsencrypt_reuse_key)|ternary('--reuse-key','') }}"
+- name: Prepare reuse-key option
+  ansible.builtin.set_fact:
+    letsencrypt_opt_reuse_key: "{{ letsencrypt_cert.reuse_key | default(letsencrypt_reuse_key) | ternary('--reuse-key', '') }}"
 
-- name: prepare allow-subset-of-names option
-  set_fact:
-    letsencrypt_opt_allow_subset_of_names: "{{ letsencrypt_cert.subset_names|default(letsencrypt_subset_names)|ternary('--allow-subset-of-names','') }}"
+- name: Prepare allow-subset-of-names option
+  ansible.builtin.set_fact:
+    letsencrypt_opt_allow_subset_of_names: "{{ letsencrypt_cert.subset_names | default(letsencrypt_subset_names) | ternary('--allow-subset-of-names', '') }}"
 
-- name: "prepare post-hook options #1"
-  set_fact:
+- name: "Prepare post-hook options #1"
+  ansible.builtin.set_fact:
     letsencrypt_opt_post_hook: "--post-hook '{{ letsencrypt_cert.post_hook }}'"
   when: letsencrypt_cert.post_hook|default()
 
-- name: "prepare post-hook options #2"
-  set_fact:
-    letsencrypt_opt_post_hook: "--post-hook 'systemctl restart {{ letsencrypt_cert.services|join(' ') }}'"
+- name: "Prepare post-hook options #2"
+  ansible.builtin.set_fact:
+    letsencrypt_opt_post_hook: "--post-hook 'systemctl restart {{ letsencrypt_cert.services | join(' ') }}'"
   when:
-    - not letsencrypt_cert.post_hook|default()
-    - letsencrypt_cert.services|default()
-    - letsencrypt_cert_use_post_hook_for_service_restart|default(True)
-    - not letsencrypt_cert_use_deploy_hook_for_service_restart|default(False)
+    - not letsencrypt_cert.post_hook | default()
+    - letsencrypt_cert.services | default()
+    - letsencrypt_cert_use_post_hook_for_service_restart | default(True)
+    - not letsencrypt_cert_use_deploy_hook_for_service_restart | default(False)
 
-- name: "prepare deploy-hook options #1"
-  set_fact:
+- name: "Prepare deploy-hook options #1"
+  ansible.builtin.set_fact:
     letsencrypt_opt_deploy_hook: "--deploy-hook '{{ letsencrypt_cert.deploy_hook }}'"
   when: letsencrypt_cert.deploy_hook|default()
 
-- name: "prepare deploy-hook options #2"
-  set_fact:
-    letsencrypt_opt_deploy_hook: "--deploy-hook 'systemctl restart {{ letsencrypt_cert.services|join(' ') }}'"
+- name: "Prepare deploy-hook options #2"
+  ansible.builtin.set_fact:
+    letsencrypt_opt_deploy_hook: "--deploy-hook 'systemctl restart {{ letsencrypt_cert.services | join(' ') }}'"
   when:
-    - not letsencrypt_cert.deploy_hook|default()
-    - letsencrypt_cert.services|default()
-    - not letsencrypt_cert_use_post_hook_for_service_restart|default(True)
-    - letsencrypt_cert_use_deploy_hook_for_service_restart|default(False)
+    - not letsencrypt_cert.deploy_hook | default()
+    - letsencrypt_cert.services | default()
+    - not letsencrypt_cert_use_post_hook_for_service_restart | default(True)
+    - letsencrypt_cert_use_deploy_hook_for_service_restart | default(False)
 
-- name: "prepare renew-hook options"
-  set_fact:
+- name: "Prepare renew-hook options"
+  ansible.builtin.set_fact:
     letsencrypt_opt_renew_hook: "--renew-hook '{{ letsencrypt_cert.renew_hook }}'"
   when: letsencrypt_cert.renew_hook|default()
 
-- name: create webroot directory
-  file:
-    path: "{{ letsencrypt_cert.webroot_path|default(letsencrypt_webroot_path) }}"
+- name: Create webroot directory
+  ansible.builtin.file:
+    path: "{{ letsencrypt_cert.webroot_path | default(letsencrypt_webroot_path) }}"
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
   when: letsencrypt_cert.http_auth|default(letsencrypt_http_auth) == 'webroot'
 
-- name: register Let's Encrypt certificate with HTTP challenge
-  command: >
+- name: Register Let's Encrypt certificate with HTTP challenge
+  ansible.builtin.command: >
     certbot certonly
-    {{ letsencrypt_opt_http_auth|default() }}
-    {{ letsencrypt_opt_cert_name|default() }}
-    {{ letsencrypt_opt_test_cert|default() }}
-    {{ letsencrypt_opt_reuse_key|default() }}
-    {{ letsencrypt_cert.opts_extra|default(letsencrypt_opts_extra|default()) }}
-    --domains {{ letsencrypt_cert.domains|join(',') }}
+    {{ letsencrypt_opt_http_auth | default() }}
+    {{ letsencrypt_opt_cert_name | default() }}
+    {{ letsencrypt_opt_test_cert | default() }}
+    {{ letsencrypt_opt_reuse_key | default() }}
+    {{ letsencrypt_cert.opts_extra | default(letsencrypt_opts_extra | default()) }}
+    --domains {{ letsencrypt_cert.domains | join(',') }}
     --keep-until-expiring --expand
-    {{ letsencrypt_opt_allow_subset_of_names|default() }}
+    {{ letsencrypt_opt_allow_subset_of_names | default() }}
     --non-interactive --agree-tos
-    {{ letsencrypt_opt_post_hook|default() }}
-    {{ letsencrypt_opt_deploy_hook|default() }}
-    {{ letsencrypt_opt_renew_hook|default() }}
-  when: letsencrypt_cert.challenge|default() == 'http' and letsencrypt_cert.domains|default()
+    {{ letsencrypt_opt_post_hook | default() }}
+    {{ letsencrypt_opt_deploy_hook | default() }}
+    {{ letsencrypt_opt_renew_hook | default() }}
+  when: letsencrypt_cert.challenge | default() == 'http' and letsencrypt_cert.domains | default()
   register: letsencrypt_reg_certbot_http
   changed_when: not "no action taken" in letsencrypt_reg_certbot_http.stdout
 
-- name: register Let's Encrypt certificate with DNS challenge
-  command: >
+- name: Register Let's Encrypt certificate with DNS challenge
+  ansible.builtin.command: >
     certbot certonly --manual
-    {{ letsencrypt_opt_cert_name|default() }}
-    {{ letsencrypt_opt_test_cert|default() }}
-    --domains {{ letsencrypt_cert.domains|join(',') }}
+    {{ letsencrypt_opt_cert_name | default() }}
+    {{ letsencrypt_opt_test_cert | default() }}
+    --domains {{ letsencrypt_cert.domains | join(',') }}
     --preferred-challenge=dns
     --keep-until-expiring --expand
-    {{ letsencrypt_opt_allow_subset_of_names|default() }}
+    {{ letsencrypt_opt_allow_subset_of_names | default() }}
     --non-interactive --agree-tos
     --manual-public-ip-logging-ok
     --manual-auth-hook 'certbot-dns-hook.sh auth'
     --manual-cleanup-hook 'certbot-dns-hook.sh cleanup'
-    {{ letsencrypt_opt_post_hook|default() }}
-    {{ letsencrypt_opt_deploy_hook|default() }}
-    {{ letsencrypt_opt_renew_hook|default() }}
-  when: letsencrypt_cert.challenge|default() == 'dns' and letsencrypt_cert.domains|default()
+    {{ letsencrypt_opt_post_hook | default() }}
+    {{ letsencrypt_opt_deploy_hook | default() }}
+    {{ letsencrypt_opt_renew_hook | default() }}
+  when: letsencrypt_cert.challenge | default() == 'dns' and letsencrypt_cert.domains | default()
   register: letsencrypt_reg_certbot_dns
   changed_when: not "no action taken" in letsencrypt_reg_certbot_dns.stdout
 
-- name: read in system users
-  command: "cut -d: -f1 /etc/passwd"
+- name: Read in system users
+  ansible.builtin.command: "cut -d: -f1 /etc/passwd"
   register: letsencrypt_reg_system_users
   changed_when: False
 
-- name: add users to letsencrypt system group
-  user:
+- name: Add users to letsencrypt system group
+  ansible.builtin.user:
     name: "{{ item }}"
     groups: letsencrypt
     append: yes
-  with_items: "{{ letsencrypt_cert.users|default([]) }}"
-  when: letsencrypt_cert.users|default() and item in letsencrypt_reg_system_users.stdout_lines|default([])
+  with_items: "{{ letsencrypt_cert.users | default([]) }}"
+  when: letsencrypt_cert.users | default() and item in letsencrypt_reg_system_users.stdout_lines | default([])
 
 - name: Allow group
+  when: letsencrypt_group
   block:
-    - name: get dest of current private key
-      file:
+    - name: Get dest of current private key
+      ansible.builtin.file:
         path: "{{ letsencrypt_directory }}/live/{{ letsencrypt_cert.name }}/privkey.pem"
         state: link
       register: privkey
       check_mode: true
       changed_when: false
 
-    - name: ensure letsencrypt group can read private key
-      file:
+    - name: Ensure letsencrypt group can read private key
+      ansible.builtin.file:
         path: "{{ privkey.dest }}"
         owner: root
         group: letsencrypt
         mode: 0640
-  when: letsencrypt_group
