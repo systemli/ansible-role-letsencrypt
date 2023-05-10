@@ -1,29 +1,28 @@
 ---
-
-- name: install epel-release to get access to certbot
-  yum:
+- name: Install epel-release to get access to certbot
+  ansible.builtin.yum:
     name: epel-release
     state: present
 
-- name: install nsupdate which is used by the certbot auth-hook
-  yum:
+- name: Install nsupdate which is used by the certbot auth-hook
+  ansible.builtin.yum:
     name: bind-utils
     state: present
   when: letsencrypt_cert is defined and letsencrypt_cert.challenge|default() == 'dns'
 
-- name: install Let's Encrypt Certbot client
-  yum:
+- name: Install Let's Encrypt Certbot client
+  ansible.builtin.yum:
     name: certbot
     state: present
 
-- name: install certbot plugin 'apache' on webservers
-  yum:
+- name: Install certbot plugin 'apache' on webservers
+  ansible.builtin.yum:
     name: python2-certbot-apache
     state: present
   when: letsencrypt_cert is defined and letsencrypt_cert.challenge|default() == 'http' and letsencrypt_http_auth == 'apache'
 
-- name: install certbot plugin 'nginx' on webservers
-  yum:
+- name: Install certbot plugin 'nginx' on webservers
+  ansible.builtin.yum:
     name: python2-certbot-nginx
     state: present
   when: letsencrypt_cert is defined and letsencrypt_cert.challenge|default() == 'http' and letsencrypt_http_auth == 'nginx'

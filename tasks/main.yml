@@ -1,9 +1,8 @@
 ---
-
 - name: Import install tasks
-  import_tasks: install.yml
+  ansible.builtin.import_tasks: install.yml
   when: letsencrypt_setup
 
 - name: Import certificate tasks
-  import_tasks: certificate.yml
+  ansible.builtin.import_tasks: certificate.yml
   when: letsencrypt_cert|d()
