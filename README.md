@@ -19,14 +19,14 @@ Features:
 * Permission control to certificates using a dedicated system group
 
 Supported distributions:
-* Debian 10 (Buster)
 * Debian 11 (Bullseye)
-* RedHat Enterprise Linux 7
+* Debian 12 (Bookworm)
 
 Tested on:
-* Debian 10 (Buster)
 * Debian 11 (Bullseye)
-* CentOS 7
+* Debian 12 (Bookworm)
+* CentOS7
+* Ubuntu 2204 (Jammy Jellyfish)
 
 It does the following:
 * When letsencrypt_setup is True (the default) this role will:
