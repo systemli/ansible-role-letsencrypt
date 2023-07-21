@@ -1,19 +1,11 @@
 ---
 driver:
-  name: vagrant
-  provider:
-    name: virtualbox
+  name: podman
 platforms:
-  - name: letsencrypt-bullseye64
-    box: debian/bullseye64
-  - name: letsencrypt-buster64
-    box: debian/buster64
-  - name: letsencrypt-centos7
-    box: centos/7
-lint: |
-  set -e
-  yamllint .
-  ansible-lint
+  - name: debian12
+    image: geerlingguy/docker-debian12-ansible:latest
 provisioner:
   name: ansible
+  ansible_args:
+    - --diff
   become: true
