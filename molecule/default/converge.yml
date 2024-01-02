@@ -4,3 +4,19 @@
   become: true
   roles:
     - role: ansible-role-letsencrypt
+      vars:
+        letsencrypt_account:
+          hash: 1234567890abcdef1234567890abcdef
+          id: 123456789
+          creation_host: localhost
+          creation_dt: 2020-12-13T13:12:00Z
+          private_key:
+            n: 1234
+            e: 5678
+            d: 90ab
+            p: cdef
+            q: 1234
+            dp: 5678
+            dq: 90ab
+            qi: cdef
+            kty: RSA
