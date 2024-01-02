@@ -66,28 +66,5 @@
   tags:
     - molecule-notest
 
-- name: Check if a Let's Encrypt account exists
-  ansible.builtin.stat:
-    path: "{{ letsencrypt_directory }}/accounts"
-  register: letsencrypt_reg_accounts_dir
-
-- name: Prepare optional test cert option
-  ansible.builtin.set_fact:
-    letsencrypt_opt_email: "{{ letsencrypt_account_email | ternary('--email ' + letsencrypt_account_email, '') }}"
-
-- name: Prepare optional test cert option
-  ansible.builtin.set_fact:
-    letsencrypt_opt_test_cert: "{{ letsencrypt_test | default() | ternary('--test-cert', '') }}"
-
-- name: Create Let's Encrypt account
-  ansible.builtin.command: >
-    certbot register
-    {{ letsencrypt_opt_test_cert }}
-    {{ letsencrypt_opt_email }}
-    {{ letsencrypt_opts_extra }}
-    --non-interactive --agree-tos --quiet
-  register: letsencrypt_reg_account
-  changed_when: letsencrypt_reg_account.rc != 0
-  when: not letsencrypt_reg_accounts_dir.stat.exists
-  tags:
-    - molecule-notest
+- name: Import account setup tasks
+  ansible.builtin.import_tasks: account.yml
