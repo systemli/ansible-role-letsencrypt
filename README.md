@@ -247,6 +247,27 @@ Activate: 20181017144534
 # Ansible variable defaults
 
 ```
+# Perform setup step; set false to disable
+letsencrypt_setup: True
+
+# Provide existing account data to be copied over
+letsencrypt_account: ""
+# letsencrypt_account:
+#   hash: 1234567890abcdef1234567890abcdef
+#   id: 123456789
+#   creation_host: localhost
+#   creation_dt: 2020-12-13T13:12:00Z
+#   private_key:
+#     n: 1234
+#     e: 5678
+#     d: 90ab
+#     p: cdef
+#     q: 1234
+#     dp: 5678
+#     dq: 90ab
+#     qi: cdef
+#     kty: RSA
+
 # Set the email address associated with the Let's Encrypt account
 letsencrypt_account_email: ""
 
@@ -260,10 +281,10 @@ letsencrypt_webroot_path: /var/www
 letsencrypt_dns_challenge: yes
 
 # Settings for the dynamic DNS zone updates
-#letsencrypt_ddns_server: ""
-#letsencrypt_ddns_zone: ""
-#letsencrypt_ddns_key: ""
-#letsencrypt_ddns_privkey: ""
+# letsencrypt_ddns_server: ""
+# letsencrypt_ddns_zone: ""
+# letsencrypt_ddns_key: ""
+# letsencrypt_ddns_privkey: ""
 
 # Create system group 'letsencrypt' for access to certificates
 letsencrypt_group: yes
@@ -276,6 +297,9 @@ letsencrypt_subset_names: True
 
 # Set global extra commandline options for certbot
 letsencrypt_opts_extra: ""
+
+# Set path for letsencrypt directory (no trailing "/" !!)
+letsencrypt_directory: /etc/letsencrypt
 ```
 
 ## Testing
