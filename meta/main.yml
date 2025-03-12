@@ -14,7 +14,7 @@ galaxy_info:
   platforms:
     - name: Debian
       versions:
-        - bullseye
         - bookworm
+        - bullseye
 
 dependencies: []
