@@ -8,7 +8,9 @@
   ansible.builtin.dnf:
     name: bind-utils
     state: present
-  when: letsencrypt_cert is defined and letsencrypt_cert.challenge|default() == 'dns'
+  when:
+    - letsencrypt_cert is defined
+    - letsencrypt_cert.challenge | default('') == 'dns'
 
 - name: Install Let's Encrypt Certbot client
   ansible.builtin.dnf:
@@ -19,10 +21,16 @@
   ansible.builtin.dnf:
     name: python2-certbot-apache
     state: present
-  when: letsencrypt_cert is defined and letsencrypt_cert.challenge|default() == 'http' and letsencrypt_http_auth == 'apache'
+  when:
+    - letsencrypt_cert is defined
+    - letsencrypt_cert.challenge | default('') == 'http'
+    - letsencrypt_http_auth == 'apache'
 
 - name: Install certbot plugin 'nginx' on webservers
   ansible.builtin.dnf:
     name: python2-certbot-nginx
     state: present
-  when: letsencrypt_cert is defined and letsencrypt_cert.challenge|default() == 'http' and letsencrypt_http_auth == 'nginx'
+  when:
+    - letsencrypt_cert is defined
+    - letsencrypt_cert.challenge | default() == 'http'
+    - letsencrypt_http_auth == 'nginx'

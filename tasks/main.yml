@@ -1,8 +1,11 @@
 ---
 - name: Import install tasks
   ansible.builtin.import_tasks: install.yml
-  when: letsencrypt_setup
+  when: letsencrypt_setup | bool
 
 - name: Import certificate tasks
   ansible.builtin.import_tasks: certificate.yml
-  when: letsencrypt_cert|d()
+  when:
+    - letsencrypt_cert is defined
+    - letsencrypt_cert is mapping
+    - letsencrypt_cert.name | default('', true) | length > 0

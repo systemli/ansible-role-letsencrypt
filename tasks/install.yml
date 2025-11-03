@@ -28,7 +28,7 @@
         owner: root
         group: root
         mode: "0400"
-      when: letsencrypt_ddns_key|default()
+      when: letsencrypt_ddns_key | default('', true) | length > 0
 
     - name: Install certbot DNS challenge nsupdate private key
       ansible.builtin.copy:
@@ -37,7 +37,7 @@
         owner: root
         group: root
         mode: "0400"
-      when: letsencrypt_ddns_privkey|default()
+      when: letsencrypt_ddns_privkey | default('', true) | length > 0
 
 - name: Add group
   when: letsencrypt_group
@@ -46,6 +46,7 @@
       ansible.builtin.group:
         name: letsencrypt
         system: true
+
     - name: Adjust permissions for certificate directories
       ansible.builtin.file:
         path: "{{ item }}"
