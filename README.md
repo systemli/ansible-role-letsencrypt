@@ -19,12 +19,12 @@ Features:
 * Permission control to certificates using a dedicated system group
 
 Supported distributions:
+* Debian 13 (Trixie)
 * Debian 12 (Bookworm)
-* Debian 11 (Bullseye)
 
 Tested on:
+* Debian 13 (Trixie)
 * Debian 12 (Bookworm)
-* Debian 11 (Bullseye)
 * CentOS8
 * Ubuntu 24.04 (Noble Numbat)
 
