@@ -21,6 +21,7 @@ Features:
 Supported distributions:
 * Debian 13 (Trixie)
 * Debian 12 (Bookworm)
+* Ubuntu 24.04 (Noble Numbat)
 
 Tested on:
 * Debian 13 (Trixie)
@@ -139,8 +140,7 @@ The role takes care of installing certbot and requesting SSL certificates
 using either the HTTP or the DNS challenge. It doesn't install or configure
 the required infrastructure (i.e. the Apache webserver or a DNS server).
 
-The role is tested in CI with ansible-core 2.19. No guarantees that it runs with
-earlier versions of Ansible.
+The role requires Ansible 2.14 or newer and is tested in CI with ansible-core 2.19.
 
 ## The HTTP challenge
 
