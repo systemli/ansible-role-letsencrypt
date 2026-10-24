@@ -12,7 +12,7 @@ Ansible role that installs certbot and requests Let's Encrypt certificates on De
 
 ## Checks
 
-- `yamllint .` must pass (config in `.yamllint`)
+- `ansible-lint` must pass with its default configuration (no repo-specific config)
 - `ansible-lint .` should not report new findings; it creates `.ansible/`, which is git ignored, never commit it
 - `molecule test` runs the role in a container; CI runs it on Debian 12, Debian 13 and Ubuntu 24.04
 
