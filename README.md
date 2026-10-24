@@ -1,6 +1,6 @@
 # Ansible role to obtain Let's Encrypt SSL certificates
 
-![Integration](https://github.com/systemli/ansible-role-letsencrypt/workflows/Integration/badge.svg?branch=main)
+[![Integration](https://github.com/systemli/ansible-role-letsencrypt/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/systemli/ansible-role-letsencrypt/actions/workflows/main.yml)
 [![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-letsencrypt-blue.svg)](https://galaxy.ansible.com/systemli/letsencrypt/)
 
 This role is meant to request SSL certificates from Let's Encrypt,
@@ -11,7 +11,7 @@ Features:
 * Supports both the HTTP and the DNS challenge
   * For HTTP challenge, the authenticator plugins `apache`, `nginx`, `standalone`
     and `webroot` are supported
-* The DNS challenge uses a dedicated zone for AMCE challenge tokens
+* The DNS challenge uses a dedicated zone for ACME challenge tokens
   only, lowering the security risks of dynamic updates. The concept
   is explained [here](https://www.crc.id.au/using-centralised-management-with-lets-encrypt/)
 * Restart of services at certificate renewal using post-hooks or custom
@@ -25,7 +25,6 @@ Supported distributions:
 Tested on:
 * Debian 13 (Trixie)
 * Debian 12 (Bookworm)
-* CentOS8
 * Ubuntu 24.04 (Noble Numbat)
 
 It does the following:
@@ -140,7 +139,7 @@ The role takes care of installing certbot and requesting SSL certificates
 using either the HTTP or the DNS challenge. It doesn't install or configure
 the required infrastructure (i.e. the Apache webserver or a DNS server).
 
-The role is tested with Ansible 2.2 only. No guaranties that it runs with
+The role is tested in CI with ansible-core 2.19. No guarantees that it runs with
 earlier versions of Ansible.
 
 ## The HTTP challenge
@@ -308,10 +307,20 @@ For testing purposes, variable `letsencrypt_test` can be set. If set to
 True, the role will use Let's Encrypt test servers for account creation
 and obtaining the certificate.
 
-For developing and testing the role we use Molecule and Vagrant/Github Actions. On the local environment you can easily test the role with
+For developing and testing the role we use Molecule with the Docker driver,
+run by GitHub Actions on every pull request. Locally you need Docker (or a
+compatible runtime), `molecule`, `molecule-plugins[docker]` and `ansible-lint`.
+Run the full test with
 
 ```
 molecule test
+```
+
+or keep the container for iterating on the role:
+
+```
+molecule converge
+molecule login
 ```
 
 ## License
