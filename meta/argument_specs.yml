@@ -3,7 +3,8 @@ argument_specs:
   main:
     short_description: Obtain Let's Encrypt SSL certificates with certbot
     description:
-      - Installs certbot and the DNS challenge helper, registers an ACME account and, if C(letsencrypt_cert) is set, requests a certificate via the HTTP or the DNS challenge.
+      - Installs certbot and the DNS challenge helper, registers an ACME account and, if C(letsencrypt_cert) is set, requests a certificate via the HTTP or the
+        DNS challenge.
     options:
       letsencrypt_setup:
         type: bool
@@ -12,7 +13,8 @@ argument_specs:
       letsencrypt_account:
         type: raw
         description:
-          - Existing account data to be copied over, either an empty string or a dict with the keys C(hash), C(id), C(creation_host), C(creation_dt) and C(private_key) (a dict with C(n), C(e), C(d), C(p), C(q), C(dp), C(dq), C(qi), C(kty)).
+          - Existing account data to be copied over, either an empty string or a dict with the keys C(hash), C(id), C(creation_host), C(creation_dt) and
+            C(private_key) (a dict with C(n), C(e), C(d), C(p), C(q), C(dp), C(dq), C(qi), C(kty)).
       letsencrypt_account_email:
         type: str
         description:

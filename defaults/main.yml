@@ -1,7 +1,7 @@
 ---
 
 # Perform setup step; set false to disable
-letsencrypt_setup: True
+letsencrypt_setup: true
 
 # Provide existing account data to be copied over
 letsencrypt_account: ""
@@ -31,7 +31,7 @@ letsencrypt_http_auth: webroot
 letsencrypt_webroot_path: /var/www
 
 # Install the DNS challenge helper script and DNS update key
-letsencrypt_dns_challenge: yes
+letsencrypt_dns_challenge: true
 
 # Settings for the dynamic DNS zone updates
 # letsencrypt_ddns_server: ""
@@ -40,13 +40,13 @@ letsencrypt_dns_challenge: yes
 # letsencrypt_ddns_privkey: ""
 
 # Create system group 'letsencrypt' for access to certificates
-letsencrypt_group: yes
+letsencrypt_group: true
 
 # Reuse private key at certificate renewal?
-letsencrypt_reuse_key: False
+letsencrypt_reuse_key: false
 
 # Allow subset of names?
-letsencrypt_subset_names: True
+letsencrypt_subset_names: true
 
 # Set global extra commandline options for certbot
 letsencrypt_opts_extra: ""

@@ -1,5 +1,4 @@
 ---
-
 - name: Install provided Let's Encrypt ACME account
   when:
     - letsencrypt_account is mapping
@@ -10,7 +9,7 @@
         path: "{{ letsencrypt_directory }}/{{ item }}"
         owner: root
         group: root
-        mode: 0700
+        mode: "0700"
         state: directory
       with_items:
         - accounts
@@ -24,7 +23,7 @@
         dest: "{{ letsencrypt_directory }}/accounts/acme-v02.api.letsencrypt.org/directory/{{ letsencrypt_account.hash }}/{{ item }}"
         owner: root
         group: root
-        mode: 0644
+        mode: "0644"
       with_items:
         - meta.json
         - regr.json
@@ -35,30 +34,29 @@
         dest: "{{ letsencrypt_directory }}/accounts/acme-v02.api.letsencrypt.org/directory/{{ letsencrypt_account.hash }}/private_key.json"
         owner: root
         group: root
-        mode: 0400
+        mode: "0400"
 
 - name: Create new Let's Encrypt ACME account
   when: letsencrypt_account is not mapping or letsencrypt_account.hash is not defined
   tags:
     - molecule-notest
   block:
+    - name: Check if a Let's Encrypt account exists
+      ansible.builtin.stat:
+        path: "{{ letsencrypt_directory }}/accounts"
+      register: letsencrypt_reg_accounts_dir
 
-  - name: Check if a Let's Encrypt account exists
-    ansible.builtin.stat:
-      path: "{{ letsencrypt_directory }}/accounts"
-    register: letsencrypt_reg_accounts_dir
+    - name: Prepare optional account email option
+      ansible.builtin.set_fact:
+        letsencrypt_opt_email: "{{ letsencrypt_account_email | ternary('--email ' + letsencrypt_account_email, '') }}"
 
-  - name: Prepare optional account email option
-    ansible.builtin.set_fact:
-      letsencrypt_opt_email: "{{ letsencrypt_account_email | ternary('--email ' + letsencrypt_account_email, '') }}"
-
-  - name: Create new Let's Encrypt account
-    ansible.builtin.command: >
-      certbot register
-      {{ letsencrypt_opt_test_cert }}
-      {{ letsencrypt_opt_email }}
-      {{ letsencrypt_opts_extra }}
-      --non-interactive --agree-tos --quiet
-    register: letsencrypt_reg_account
-    changed_when: letsencrypt_reg_account.rc != 0
-    when: not letsencrypt_reg_accounts_dir.stat.exists or letsencrypt_force_register | default(false) | bool
+    - name: Create new Let's Encrypt account
+      ansible.builtin.command: >
+        certbot register
+        {{ letsencrypt_opt_test_cert }}
+        {{ letsencrypt_opt_email }}
+        {{ letsencrypt_opts_extra }}
+        --non-interactive --agree-tos --quiet
+      register: letsencrypt_reg_account
+      changed_when: letsencrypt_reg_account.rc != 0
+      when: not letsencrypt_reg_accounts_dir.stat.exists or letsencrypt_force_register | default(false) | bool

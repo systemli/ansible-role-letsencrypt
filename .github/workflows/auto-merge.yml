@@ -3,7 +3,6 @@ name: Auto Merge
 
 on:
   pull_request_target:
-
 permissions:
   contents: read
 

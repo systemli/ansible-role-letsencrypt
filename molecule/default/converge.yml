@@ -11,7 +11,7 @@
           creation_host: localhost
           creation_dt: 2020-12-13T13:12:00Z
           private_key:
-            n: 1234
+            "n": 1234
             e: 5678
             d: 90ab
             p: cdef
