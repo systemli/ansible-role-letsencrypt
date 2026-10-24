@@ -9,17 +9,14 @@ argument_specs:
         type: bool
         description:
           - Perform the setup step (install certbot, account, helper script, group). Set false to disable.
-        default: true
       letsencrypt_account:
         type: raw
         description:
           - Existing account data to be copied over, either an empty string or a dict with the keys C(hash), C(id), C(creation_host), C(creation_dt) and C(private_key) (a dict with C(n), C(e), C(d), C(p), C(q), C(dp), C(dq), C(qi), C(kty)).
-        default: ''
       letsencrypt_account_email:
         type: str
         description:
           - Email address associated with the Let's Encrypt account.
-        default: ''
       letsencrypt_http_auth:
         type: str
         choices:
@@ -29,47 +26,38 @@ argument_specs:
           - standalone
         description:
           - Default authenticator for the HTTP challenge.
-        default: webroot
       letsencrypt_webroot_path:
         type: path
         description:
           - Default webroot path for the authenticator 'webroot'
-        default: /var/www
       letsencrypt_dns_challenge:
         type: bool
         description:
           - Install the DNS challenge helper script and DNS update key.
-        default: true
       letsencrypt_group:
         type: bool
         description:
           - Create system group C(letsencrypt) for access to certificates.
-        default: true
       letsencrypt_reuse_key:
         type: bool
         description:
           - Reuse private key at certificate renewal?
-        default: false
       letsencrypt_subset_names:
         type: bool
         description:
           - Allow subset of names?
-        default: true
       letsencrypt_opts_extra:
         type: str
         description:
           - Set global extra commandline options for certbot
-        default: ''
       letsencrypt_directory:
         type: path
         description:
           - Set path for letsencrypt directory (no trailing "/" !!)
-        default: /etc/letsencrypt
       letsencrypt_force_register:
         type: bool
         description:
           - force/renew registration even accounts already exists
-        default: false
       letsencrypt_cert:
         type: dict
         description:
