@@ -1,35 +1,48 @@
 ---
 name-template: '$RESOLVED_VERSION'
 tag-template: '$RESOLVED_VERSION'
+# Categories group the changelog and resolve the next version from PR labels.
+# The highest matching semver-increment wins; the last entry is the fallback.
 categories:
+  - title: '💥 Breaking Changes'
+    semver-increment: major
+    exclusive: true
+    when:
+      label: 'breaking'
   - title: '🚀 Features'
-    labels:
-      - 'feature'
-      - 'enhancement'
+    semver-increment: minor
+    when:
+      label: 'enhancement'
   - title: '🐛 Bug Fixes'
-    labels:
-      - 'fix'
-      - 'bugfix'
-      - 'bug'
+    semver-increment: patch
+    when:
+      label: 'bug'
   - title: '🧹 Maintenance'
-    labels:
-      - 'chore'
-      - 'dependencies'
-version-resolver:
-  major:
-    labels:
-      - 'feature'
-  minor:
-    labels:
-      - 'enhancement'
-  patch:
-    labels:
-      - 'fix'
-      - 'bugfix'
-      - 'bug'
-      - 'chore'
-      - 'dependencies'
-  default: patch
+    semver-increment: patch
+    when:
+      labels:
+        - 'chore'
+        - 'dependencies'
+        - 'github_actions'
+  - title: '📦 Other Changes'
+    semver-increment: patch
+  - type: version-resolver
+    semver-increment: patch
+# Labels are derived from conventional commit style PR titles
+sync-labels: true
+autolabeler:
+  - label: 'breaking'
+    title:
+      - '/^\w+(\(.+\))?!:/'
+  - label: 'enhancement'
+    title:
+      - '/^feat(\(.+\))?!?:/'
+  - label: 'bug'
+    title:
+      - '/^fix(\(.+\))?!?:/'
+  - label: 'chore'
+    title:
+      - '/^(chore|refactor|ci|docs|build|test|style|perf)(\(.+\))?!?:/'
 template: |
   ## Changes
 
