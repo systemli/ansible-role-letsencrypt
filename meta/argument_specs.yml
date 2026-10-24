@@ -1,0 +1,150 @@
+---
+argument_specs:
+  main:
+    short_description: Obtain Let's Encrypt SSL certificates with certbot
+    description:
+      - Installs certbot and the DNS challenge helper, registers an ACME account and, if C(letsencrypt_cert) is set, requests a certificate via the HTTP or the DNS challenge.
+    options:
+      letsencrypt_setup:
+        type: bool
+        description:
+          - Perform the setup step (install certbot, account, helper script, group). Set false to disable.
+      letsencrypt_account:
+        type: raw
+        description:
+          - Existing account data to be copied over, either an empty string or a dict with the keys C(hash), C(id), C(creation_host), C(creation_dt) and C(private_key) (a dict with C(n), C(e), C(d), C(p), C(q), C(dp), C(dq), C(qi), C(kty)).
+      letsencrypt_account_email:
+        type: str
+        description:
+          - Email address associated with the Let's Encrypt account.
+      letsencrypt_http_auth:
+        type: str
+        choices:
+          - webroot
+          - apache
+          - nginx
+          - standalone
+        description:
+          - Default authenticator for the HTTP challenge.
+      letsencrypt_webroot_path:
+        type: path
+        description:
+          - Default webroot path for the authenticator 'webroot'
+      letsencrypt_dns_challenge:
+        type: bool
+        description:
+          - Install the DNS challenge helper script and DNS update key.
+      letsencrypt_group:
+        type: bool
+        description:
+          - Create system group C(letsencrypt) for access to certificates.
+      letsencrypt_reuse_key:
+        type: bool
+        description:
+          - Reuse private key at certificate renewal?
+      letsencrypt_subset_names:
+        type: bool
+        description:
+          - Allow subset of names?
+      letsencrypt_opts_extra:
+        type: str
+        description:
+          - Set global extra commandline options for certbot
+      letsencrypt_directory:
+        type: path
+        description:
+          - Set path for letsencrypt directory (no trailing "/" !!)
+      letsencrypt_force_register:
+        type: bool
+        description:
+          - force/renew registration even accounts already exists
+      letsencrypt_cert:
+        type: dict
+        description:
+          - Certificate to request. Only processed if C(name) is set.
+        options:
+          name:
+            type: str
+            description:
+              - Certificate name.
+          domains:
+            type: list
+            elements: str
+            description:
+              - Domains of the certificate (needed to request one).
+          challenge:
+            type: str
+            choices:
+              - http
+              - dns
+            description:
+              - Needed to request a certificate.
+          http_auth:
+            type: str
+            choices:
+              - webroot
+              - apache
+              - nginx
+              - standalone
+            description:
+              - Authenticator for the HTTP challenge, defaults to C(letsencrypt_http_auth).
+          webroot_path:
+            type: path
+            description:
+              - Defaults to C(letsencrypt_webroot_path).
+          services:
+            type: list
+            elements: str
+            description:
+              - Services restarted via hook after renewal.
+          reuse_key:
+            type: bool
+            description:
+              - Defaults to C(letsencrypt_reuse_key).
+          subset_names:
+            type: bool
+            description:
+              - Defaults to C(letsencrypt_subset_names).
+          post_hook:
+            type: str
+          deploy_hook:
+            type: str
+          renew_hook:
+            type: str
+          opts_extra:
+            type: str
+            description:
+              - Defaults to C(letsencrypt_opts_extra).
+          users:
+            type: list
+            elements: str
+            description:
+              - Users added to the system group C(letsencrypt).
+      letsencrypt_ddns_server:
+        type: str
+        description:
+          - DNS server for the dynamic DNS zone updates (DNS challenge).
+      letsencrypt_ddns_zone:
+        type: str
+        description:
+          - Dedicated zone for the ACME challenge tokens.
+      letsencrypt_ddns_key:
+        type: str
+        description:
+          - Content of the DNS update key.
+      letsencrypt_ddns_privkey:
+        type: str
+        description:
+          - Content of the private DNS update key.
+      letsencrypt_test:
+        type: bool
+        description:
+          - Use the Let's Encrypt staging environment (C(--test-cert)).
+      letsencrypt_cert_use_post_hook_for_service_restart:
+        type: bool
+        description:
+          - Restart services via post-hook. Defaults to true.
+      letsencrypt_cert_use_deploy_hook_for_service_restart:
+        type: bool
+        description:
+          - Restart services via deploy-hook instead. Defaults to false.
