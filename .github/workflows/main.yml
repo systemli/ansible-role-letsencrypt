@@ -13,6 +13,6 @@ on:
 jobs:
   integration:
     name: Integration
-    uses: systemli/github-ansible-workflow/.github/workflows/ansible-integration-workflow.yaml@v1.6.0
+    uses: systemli/github-ansible-workflow/.github/workflows/ansible-integration-workflow.yaml@998371abb4f2b95d4cf6b78b1f978bad639a66e5 # v1.6.2
     with:
       distros: '[ "debian13", "debian12", "ubuntu2404" ]'
