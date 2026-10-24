@@ -64,3 +64,6 @@ tramp
 .vagrant
 molecule/*/.molecule
 tests/__pycache__
+
+# Ansible files
+.ansible/

@@ -10,7 +10,7 @@ on:
 jobs:
   galaxy:
     name: Ansible Galaxy
-    uses: systemli/github-ansible-workflow/.github/workflows/ansible-galaxy-workflow.yaml@main
+    uses: systemli/github-ansible-workflow/.github/workflows/ansible-galaxy-workflow.yaml@998371abb4f2b95d4cf6b78b1f978bad639a66e5 # v1.6.2
     with:
       git-branch: ${{ github.ref_name }}
     secrets:

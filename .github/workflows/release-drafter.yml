@@ -6,13 +6,17 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+  pull-requests: read
+
 jobs:
   release:
     name: Update Release
     runs-on: ubuntu-24.04
     steps:
       - name: Publish Release
-        uses: release-drafter/release-drafter@v6
+        uses: release-drafter/release-drafter@978bb0b30c5ee8cdd332ced253758157150d43f0 # v7.10.0
         with:
           publish: false
         env:

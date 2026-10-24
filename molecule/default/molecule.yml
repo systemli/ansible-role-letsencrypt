@@ -18,8 +18,3 @@ provisioner:
   ansible_args:
     - --diff
   become: true
-
-dependency:
-  name: galaxy
-  options:
-    requirements-file: requirements.yml
