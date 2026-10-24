@@ -123,13 +123,13 @@
 - name: Read in system users
   ansible.builtin.command: "cut -d: -f1 /etc/passwd"
   register: letsencrypt_reg_system_users
-  changed_when: False
+  changed_when: false
 
 - name: Add users to letsencrypt system group
   ansible.builtin.user:
     name: "{{ item }}"
     groups: letsencrypt
-    append: yes
+    append: true
   with_items: "{{ letsencrypt_cert.users | default([]) }}"
   when: letsencrypt_cert.users | default() and item in letsencrypt_reg_system_users.stdout_lines | default([])
 
@@ -149,4 +149,4 @@
         path: "{{ privkey.dest }}"
         owner: root
         group: letsencrypt
-        mode: 0640
+        mode: "0640"
